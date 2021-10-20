@@ -1,0 +1,2 @@
+nasm -g -f elf64 (filename)  -o (filename).o
+ld (filename(.o)) -o (filename)
