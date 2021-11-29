@@ -3,53 +3,39 @@
 #include <string.h>
 #include <stdbool.h>
 
-
 int charToInt(char locationchar){
-	
-	// This function will returna char number to an int one
+
 	return locationchar - '0';
 
 }
 
 char getPlayerInput(char board[9]){
-
-	int validInput = 0; 
-	/*int validInput = 0; - added to each time each time the input passes a test. there are three test:
-		- Firstly, the first character is a letter a,b,c
-		- Secondly the second character is a number between 1,2,3
-		- Finally, the location which is got from the cords is not already in use */
+	int validInput = 0;
+	int validInputPart1 = 0;
+	int validInputPart2 = 0;
+	int validInputPart3 = 0;
+	char cordLocation[2];
 	int i;
-	int intlocation; // the location is taken in as a string and is converted into an int later, this is used
-	char location; // the location is first stored as a string 
-	char cordLocation[2]; 
-	char playerInput[50]; // the players input is taken in as a large string then using the array above, only the first 2 charicters are taken
-	// this is because if the user enters move than 2 digits for the cord location. there will not be enough spaces.
-	// this could be fixed better but using execption handling but for a quick fix just made it a larger array to people where less likely
-	// to crash the program easliy, if have time will add execption handling. 
+
+	char location;
+	int intlocation;
 
 	while (validInput < 3){
-		validInput = 0;		
-		
 		printf("\nPlease Enter location: ");
-		scanf("%s", &playerInput);
-		
-		cordLocation[0] = playerInput[0];
-		cordLocation[1] = playerInput[1];
-
-		//scanf("%s",&cordLocation);
+		scanf("%s",&cordLocation);
 		//printf("\nDEBUG | cordLocation = %s\n",cordLocation);
 	
 		if (cordLocation[0] == 'a' || cordLocation[0] == 'b' || cordLocation[0] == 'c'){
 			
-			validInput++;
+			validInputPart1 = 1;
 		//	printf("\nDEBUG | cordLocation[0] is a b or c\n");
 		} 
 			
 // add the statement to validate an in put fo the first bit saying if the first bit is a or b or c good then do second bit if 1 or 2 or 3 it is good. then after that do the switch player then do player make move then do who wins 	
 					
-		if (playerInput[1] == '1' || playerInput[1] == '2' || playerInput[1] == '3'){
+		if (cordLocation[1] == '1' || cordLocation[1] == '2' || cordLocation[1] == '3'){
 		
-			validInput++;
+			validInputPart2 = 1;
 		//	printf("\nDEBUG | cordLocation[1] is 1 2 or 3\n");
 		}
 
@@ -73,23 +59,16 @@ char getPlayerInput(char board[9]){
 
 		//	printf("\nDEBUG | before if\n");
 			//printf("\n%c\n",board[intlocation]);
-			if (board[intlocation]=='-'){
-				
-				validInput++;
-				i=10;
-
+			if (board[intlocation]=='-'){validInputPart3 = 1;i=10;
 			//	printf("\nDEBUG | validinputpart3 = %d\n",validInputPart3);
 			}
 		
 		//	printf("\nDEBUG | after if\n");
 		}
 
+		validInput = validInputPart1 + validInputPart2 + validInputPart3;
 		//printf("\n\n\n%d\n\n\n",validInput);	
-		
-		//validInput = validInputPart1 + validInputPart2 + validInputPart3;
-
 		if (validInput == 3){
-
 			
 			//printf("\nDEBUG | validInput = %d	part1 = %d part2 = %d part3 = %d \n",validInput,validInputPart1, validInputPart2, validInputPart3);
 			
@@ -100,7 +79,7 @@ char getPlayerInput(char board[9]){
 	return location;		
 
 }
-void drawBoard(char board[9]){
+void drawBoard(char board[9], char player1Moves[9], char player2Moves[9]){
 
 	printf("\n\n   PLAYING BOARD\n");
 
@@ -205,6 +184,7 @@ void main(){
 	char board[9] = "---------";
 	char player1Moves[9] = "---------";
 	char player2Moves[9] = "---------";
+	int winner = 0; // 0 = no one | 1 = player1 | 2 = player2 | player 3 = draw 
 	char playerInput;
 	int playerInputInt;
 	int playerTurn = 1;
@@ -214,7 +194,7 @@ void main(){
 	int isDraw;
 	system("clear");
 	while (1==1){
-		drawBoard(board);
+		drawBoard(board,player1Moves,player2Moves);
 		playerInput = getPlayerInput(board);
 		playerInputInt = charToInt(playerInput);
 		//printf("\nDEBUG | playerInput = %c\n",playerInput);
@@ -229,6 +209,15 @@ void main(){
 			toPlace = 'x';
 			player1Moves[playerInputInt] = toPlace;
 
+		//	printf("\nPlayer 1 Moves:\n\n");
+			
+
+			/*
+			for (i=0; i<=9; i++){
+				printf("%c\n",player1Moves[i]);
+			}
+			*/
+			
 			checkPlayer1Win = checkWhoWin(player1Moves);
 
 			if (checkPlayer1Win == 1){
@@ -245,6 +234,13 @@ void main(){
 			//printf("\nDEBUG | playerturn not 1\n");
 			toPlace='o';
 			player2Moves[playerInputInt] = toPlace;
+			
+			/*
+			printf("\nPlayer 2 Moves:\n\n");
+			for (i=0; i<=9; i++){
+				printf("%c\n",player2Moves[i]);
+			}
+			*/
 
 			checkPlayer2Win = checkWhoWin(player2Moves);
 

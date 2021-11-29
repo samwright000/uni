@@ -37,14 +37,11 @@ char shiftLetter(char c, int shiftValue){
 	}
 
 
-// ADD FOR IF chater is a space
 
-	// Need to fix when y that if you shift then it will still go over
-	// problem is that depends if upper or low
 	
 //	printf("DEBUG | cValue = %d",cValue);
 
-	printf("\nDEBUG | cValue = %d\n",cValue);
+	//printf("\nDEBUG | cValue = %d\n",cValue);
 	
 	c = cValue;
 
@@ -55,6 +52,8 @@ char shiftLetter(char c, int shiftValue){
 }
 
 void main(void){
+
+	system("clear");
 
 	char plaintext[25] = "";
 	int shiftValue;
@@ -70,16 +69,15 @@ void main(void){
 	printf("\nPlease Enter Shift Value: ");
 	scanf("%d",&shiftValue);
 
-	printf("\nDEBUG | (main) plaintext = %s\n",plaintext);
-	printf("\nDEBUG | (main) shiftValue = %d\n",shiftValue);
-
-	printf("--------------------------------------------------------");
+//	printf("\nDEBUG | (main) plaintext = %s\n",plaintext);
+//	printf("\nDEBUG | (main) shiftValue = %d\n",shiftValue);
 	
-	//getc(plaintext);
 	printf("\n");
+	printf("OUTPUT: ");
 	for (i=0; i<sizeof(plaintext);i++){
 
 		if (plaintext[i] != NULL) {
+		
 		//	printf("\nDEBUG | (main) plaintext[] = %c\n",plaintext[i]);
 		//	printf("\nDEBUG | (main) i = %d\n",i);	
 			
@@ -87,10 +85,7 @@ void main(void){
 			
 			cipherC=shiftLetter(plaintext[i],shiftValue);
 			printf("%c",cipherC);
-		
-
 		}
-	
 	}
 
 	printf("\n");
