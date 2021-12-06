@@ -24,7 +24,7 @@ int charToInt(char locationchar){
 
 }
 
-char* getLeaderboardInfoForSearchedUsername(char searchingUsername[96], int which;){
+char getLeaderboardInfoForSearchedUsername(char searchingUsername[96], int which){
 
 	FILE *fp;
 	char str[100]; //line
@@ -123,24 +123,7 @@ char* getLeaderboardInfoForSearchedUsername(char searchingUsername[96], int whic
 		for (x=0; x<sizeof(newScore);x++){
 			returnArray[1][i] = newScore[i];
 		}
-		
-		if (which==1){
-		
-		return username;}
 
-		if (which ==2){
-		return newScore;
-		}
-
-		if (which ==3){
-			char *strLineInTXT[5];
-			sprintf(strLineInTXT,"%d",lineInTXT);
-		return strLineInTXT;
-		}
-		
-		
-
-	
 	}
 
 	else{printf("\nPlayer Not Found...");}
@@ -161,9 +144,9 @@ void main(){
 
 	printf("\nEnter Username To Search For: ");
 	scanf("%s",&searchingUsername);
-	username = getLeaderboardInfoForSearchedUsername(searchingUsername,1);
-	score = getLeaderboardInfoForSeachedUsername(searchingUsername,2);
-	line = getLeaderboardInfoForSeachedUsername(searchingUsername,3);
+//	username = getLeaderboardInfoForSearchedUsername(searchingUsername,1);
+//	score = getLeaderboardInfoForSeachedUsername(searchingUsername,2);
+//	line = getLeaderboardInfoForSeachedUsername(searchingUsername,3);
 
 	printf("\nusername: %s\n",username);
 	printf("\nscore: %d\n",score);

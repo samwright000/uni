@@ -200,6 +200,181 @@ int checkIfDraw(char board[9]){
 
 }
 
+int getLineNumberLeaderboard(char searchingUsername[50])
+{
+
+	FILE *fp;
+	char line[100];
+	char foundUsername[50];
+	char foundScore[50];
+	int pass = 0;
+	int found = 0;
+	int lineNumber=0;
+	int sizeOfUsername =0;
+
+	fp = fopen("leaderboard.txt","r");
+	
+	//printf("searchingUsername: %s ",searchingUsername);
+
+	
+	while (fgets(line,100,fp) && found == 0)
+	{
+
+		lineNumber++;
+//		printf("\n%s\n",line);
+		
+		int i;
+		sizeOfUsername = 0;
+		for (i=0; i<=sizeof(line); i++)
+		{
+	//		printf("\nline[i] = %c\n",line[i]);
+			
+			if (line[i] == NULL){
+			
+				
+			}
+
+			if (line[i] == ',')
+			{
+				pass = 1;
+			}
+
+			else if (line[i] != NULL && pass == 0){
+				foundUsername[i]=line[i];
+				//printf("\nfound username: %s\n",foundUsername);
+				sizeOfUsername++;
+			}
+
+			if (line[i] != NULL && pass == 1){
+				//printf("\nIn Found Score\n");
+				
+				
+				foundScore[i-sizeOfUsername]=line[i];
+				//printf("\nfound score: %s \n",foundScore);
+			}
+
+		
+		}
+
+		if (strcmp(foundUsername,searchingUsername) == 0)
+			 
+		{found = 1;}
+
+		else
+		{
+			pass = 0;
+			memset(line,0,100);
+			memset(foundUsername,0,50);
+			memset(foundScore,0,50);
+			
+		}
+	}
+
+	fclose(fp);
+	//printf("\n\n ------------------------- RESULT --------------------\n\n");
+	if (found == 1){
+
+	//printf("\n\nUsername: %s\n\n", foundUsername);
+	//printf("\n\nScore: %s\n\n", foundScore);
+	//printf("\n\nLine Number: %d\n\n",lineNumber);	
+	
+	return lineNumber;
+	
+	}
+
+	else{printf("\n\nNO PLAYER FOUND!!!\n\n");
+	return 0;
+	}
+
+}
+
+int getCurrentScore(int lineNumber)
+{
+	//printf("\nLine Number Looking For: %d\n",lineNumber);
+	FILE *fp2;
+	fp2 = fopen("leaderboard.txt","r");
+	char line[100];
+	int fileLineNumber = 0;
+	char score[10];
+	int ii;
+	for (ii=0;ii<=sizeof(line);ii++){
+		score[ii]=NULL;
+		line[ii]=NULL;
+	}
+	while (fgets(line,100,fp2))
+	{
+		fileLineNumber++;
+		if (fileLineNumber == lineNumber){
+	//	printf("\nline = %s\n",line);
+
+	int i;
+	int isScore = 0;
+	int posScore = 0;
+	int shouldBreak = 0;
+	for (i=0;i<=sizeof(line) && line[i]!=NULL && shouldBreak==0;i++){
+	//	printf("\nline[i]=%c\n",line[i]);
+		if (isScore == 1){
+	//		printf("\nline[i]=%c\n",line[i]);
+			score[posScore] = line[i];
+	//		printf("score = %s",score);
+			posScore++;
+		}
+		if (line[i]==','){	
+			isScore=1;
+	//		printf("\nisScore = %d\n",isScore);
+		}
+		if (line[i] == NULL){
+			shouldBreak = 1;
+		}	
+	}
+		}}
+	//printf("\n!!! score = %s\n",score);
+	
+	int intscore;
+
+	intscore = atoi(score); //charToInt(score); 
+	//printf("\n!!! intScore = %i",intscore);
+		
+	return intscore;
+
+
+	fclose(fp2);
+}
+
+int findUser(char username[50]){
+	int lineNumber;
+	
+	lineNumber = getLineNumberLeaderboard(username);
+	printf("\n LineNumber: %d\n",lineNumber);
+	if (lineNumber == 0){
+	
+		printf("\nUsername Not Found...\n");
+
+		return 0;
+
+
+	}
+
+	if (lineNumber != 0){
+	
+		printf("\nUser Found!\n");
+
+		return 1;
+	}
+
+
+}
+
+int createNewUser(char newUsername[50]){
+
+//you can assume that any username is good because it has already been changed
+//so all we need to do is fine the next available line.
+//and put the new line into it.
+
+
+
+}
+
 void main(){
 
 	char board[9] = "---------";
@@ -221,6 +396,7 @@ void main(){
 	
 	
 		char toPlace;
+		char option[50];
 	
 		//printf("\nDEBUG | before if playerTurn ==1\n");
 
@@ -229,15 +405,68 @@ void main(){
 			toPlace = 'x';
 			player1Moves[playerInputInt] = toPlace;
 
-			checkPlayer1Win = checkWhoWin(player1Moves);
-
+			//checkPlayer1Win = checkWhoWin(player1Moves); REMOVE LATER ONLY SO PLAYER ONE WINS!
+			checkPlayer1Win = 1;
+			char winnerUsernameToSearch[50];
+			int result;
+			char tryAgain[50];	
 			if (checkPlayer1Win == 1){
 			
 				printf("\n\n\nPlayer 1 Wins!!!\n\n\n");
-				break;
-			
-			}
+				
+				printf("\nIf you can now add an addition win to the leaderboard!\n");
+				printf("\nIf you want to add to your current score\nPlease enter !n to create a new user.\n\nIf you Don't want to record the win *sad face* \nPlease enter !q\n\nOr if you know you username just enter it\n\nPlease Enter: ");
+				
 
+				scanf("%s",option);
+				
+				
+
+
+				if (strcmp(option,"!q") == 0){
+					printf("\n You have entered !q. Bye!");
+					break;
+				}
+
+				if (strcmp(option,"!n")==0){
+
+
+					
+					while(1==1){
+					
+					printf("\nEnter Username:  ");
+					scanf("%s",&winnerUsernameToSearch);
+
+						result = findUser(winnerUsernameToSearch);
+					
+						if (result == 1){
+						printf("\n User found!, if it is yours enter !c, if you would you like to enter another username? enter !y  if yes, if you don't want to record the win enter !n for no: ");
+						scanf("%s",&tryAgain);
+						}
+						if (result == 0){
+							printf("\n TEST - USERNAME ACCEPTED NOW ADDING WITH SCORE OF 1\n");
+							addNewUser
+							break;
+						
+						}
+						
+						if (strcmp(tryAgain,"!n") ==0){
+						break;}
+
+						if (strcmp(tryAgain,"!c") ==0){
+						printf("\nADDING TO SCORE FOR USER - %s\n",winnerUsernameToSearch);
+						break;	
+						}
+
+						if (strcmp(tryAgain,"!y")==0){
+						printf("\nYou want to enter a different username!\n");}
+					}
+					break;
+				}
+
+				
+
+			}
 		}
 		
 		else{
