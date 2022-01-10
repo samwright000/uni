@@ -271,18 +271,20 @@ int getLineNumberLeaderboard(char searchingUsername[50])
 	}
 
 	fclose(fp);
-	printf("\n\n ------------------------- RESULT --------------------\n\n");
+//	printf("\n\n ------------------------- RESULT --------------------\n\n");
 	if (found == 1){
 
-	printf("\n\nUsername: %s\n\n", foundUsername);
-	printf("\n\nScore: %s\n\n", foundScore);
-	printf("\n\nLine Number: %d\n\n",lineNumber);	
+//	printf("\n\nUsername: %s\n\n", foundUsername);
+//	printf("\n\nScore: %s\n\n", foundScore);
+//	printf("\n\nLine Number: %d\n\n",lineNumber);	
 	
 	return lineNumber;
 	
 	}
 
-	else{printf("\n\nNO PLAYER FOUND!!!\n\n");
+	else{
+
+//	printf("\n\nNO PLAYER FOUND!!!\n\n");
 	return 0;
 	}
 
@@ -345,10 +347,10 @@ int findUser(char username[50]){
 	int lineNumber;
 	
 	lineNumber = getLineNumberLeaderboard(username);
-	printf("\n LineNumber: %d\n",lineNumber);
+//	printf("\n LineNumber: %d\n",lineNumber);
 	if (lineNumber == 0){
 	
-		printf("\nUsername Not Found...\n");
+//		printf("\nUsername Not Found...\n");
 
 		return 0;
 
@@ -357,7 +359,7 @@ int findUser(char username[50]){
 
 	if (lineNumber != 0){
 	
-		printf("\nUser Found!\n");
+//		printf("\nUser Found!\n");
 
 		return 1;
 	}
@@ -373,7 +375,7 @@ int createNewUser(char newUsername[50]){
 
 	sprintf(inputToFile,"%s",strcat(newUsername,",1\n"));
 
-	printf("\ninputToFile = %s\n",inputToFile);
+//	printf("\ninputToFile = %s\n",inputToFile);
 
 	fp = fopen("leaderboard.txt","a");
 
@@ -394,13 +396,13 @@ int addScoreToUser(char username[100]){
 	int lineNumber = getLineNumberLeaderboard(username);
 	int currentScore = getCurrentScore(lineNumber); 
 	int newScore = currentScore+1;
-	printf("\nnewscore = %i, currentScore = %i\n",newScore,currentScore);
+//	printf("\nnewscore = %i, currentScore = %i\n",newScore,currentScore);
 	char lineToEnter[100];
 
 	char charNewScore[50];
 	sprintf(charNewScore,"%i",newScore);
 
-	printf("\ncharNewScore = %s\n",charNewScore);
+//	printf("\ncharNewScore = %s\n",charNewScore);
 
 
 	char newLine[2] = "\n";
@@ -410,9 +412,9 @@ int addScoreToUser(char username[100]){
 
 	//printf("\nlineToEnter = %s\n",lineToEnter);
 
-	printf("\nBETWEEN SPRINTS\n");
+//	printf("\nBETWEEN SPRINTS\n");
 	sprintf(lineToEnter,"%s",strcat(lineToEnter,newLine));
-	printf("\nAFTER SPRINTFs\n");
+//	printf("\nAFTER SPRINTFs\n");
 	//printf("\nUsername = %s \n newScore = %d\n",username, newScore);
 	
 
@@ -422,21 +424,21 @@ int addScoreToUser(char username[100]){
 
 	fp = fopen("leaderboard.txt","r");
 	fp_temp = fopen("temp_leaderboard.txt","a");
-	printf("\nBEFORE WHILE LOOP\n");
+//	printf("\nBEFORE WHILE LOOP\n");
 	while(fgets(line,100,fp)){
 
 		currentLinenumber++;
-		printf("\n IN ADD SCORE WHILE LOOP\n");
+	//	printf("\n IN ADD SCORE WHILE LOOP\n");
 		
-		printf("\nlineNumber = %i, currentLineNumber = %i \n",lineNumber,currentLinenumber);
+	//	printf("\nlineNumber = %i, currentLineNumber = %i \n",lineNumber,currentLinenumber);
 
 		if (lineNumber == currentLinenumber){
 		
-			printf("\nline number match!\n");
+	//		printf("\nline number match!\n");
 			
-			printf("\nlineToEnter = %s\n",lineToEnter);
+	//		printf("\nlineToEnter = %s\n",lineToEnter);
 
-			printf("\n%s\n",line);
+	//		printf("\n%s\n",line);
 
 			fputs(lineToEnter,fp_temp);
 		
@@ -456,29 +458,29 @@ int addScoreToUser(char username[100]){
 	fclose(fp_temp);
 
 	fp_temp = fopen("temp_leaderboard.txt","r");
-	printf("\n1\n");	
+//	printf("\n1\n");	
 	
 	fp = fopen("leaderboard.txt","w");
 
 	while (fgets(line,100,fp_temp)){
 	
-		printf("\ntemp line = %s\n",line);
+	//	printf("\ntemp line = %s\n",line);
 		fputs(line,fp);
 
 	}
-	printf("\n2\n");
+//	printf("\n2\n");
 	fclose(fp);
 
 
 	fclose(fp_temp);
 
 	fp_temp = fopen("temp_leaderboard.txt","w");
-	printf("\n3\n");
+	//printf("\n3\n");
 	fputs("",fp_temp);
-	printf("\n4\n");
+//	printf("\n4\n");
 	fclose(fp_temp);
 
-	printf("\n5:\n");
+//	printf("\n5:\n");
 
 
 }
@@ -520,10 +522,10 @@ void playGame(){
 			char tryAgain[50];
 			checkPlayer1Win = checkWhoWin(player1Moves);
 			if (checkPlayer1Win == 1){
-			
-				printf("\n\n\nPlayer 1 Wins!!!\n\n\n");
+				system("clear");
+				printf("Player 1 Wins!\n");
 				
-				printf("\nIf you can now add an addition win to the leaderboard!\n");
+				printf("\nYou can add an addition win to the leaderboard!\n");
 				printf("\nIf you want to add to your current score\nPlease enter [y]\n\nIf you Don't want to record the win *sad face* \nPlease enter [n]\n\nPlease Enter: ");
 				
 
@@ -533,7 +535,7 @@ void playGame(){
 
 
 				if (strcmp(option,"n") == 0){
-					printf("\nBye!!!!!!!!!!\n");
+					printf("\nBye...\n");
 					break;
 				}
 
@@ -553,7 +555,8 @@ void playGame(){
 						scanf("%s",&tryAgain);
 						}
 						if (result == 0){
-							printf("\n TEST - USERNAME ACCEPTED NOW ADDING WITH SCORE OF 1\n");
+						//	printf("\n TEST - USERNAME ACCEPTED NOW ADDING WITH SCORE OF 1\n");
+							printf("\n Creating new user \n");
 							createNewUser(winnerUsernameToSearch);
 							break;
 						
@@ -563,7 +566,7 @@ void playGame(){
 						break;}
 
 						else if (strcmp(tryAgain,"y") ==0){
-						printf("\nADDING TO SCORE FOR USER - %s\n",winnerUsernameToSearch);
+						printf("\nAdding an additional point to user %s\n",winnerUsernameToSearch);
 						
 						addScoreToUser(winnerUsernameToSearch);
 						
@@ -599,7 +602,7 @@ void playGame(){
 			checkPlayer2Win = checkWhoWin(player2Moves);
 
 			if (checkPlayer2Win == 1){
-			
+				system("clear");		
 				printf("\n\n\nPlayer 2 Wins!!!\n\n\n");
 				
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -634,7 +637,7 @@ printf("\nIf you can now add an addition win to the leaderboard!\n");
 						scanf("%s",&tryAgain);
 						}
 						if (result == 0){
-							printf("\n TEST - USERNAME ACCEPTED NOW ADDING WITH SCORE OF 1\n");
+							//printf("\n TEST - USERNAME ACCEPTED NOW ADDING WITH SCORE OF 1\n");
 							createNewUser(winnerUsernameToSearch);
 							break;
 						
@@ -683,9 +686,12 @@ printf("\nIf you can now add an addition win to the leaderboard!\n");
 
 		system("clear");
 
-		printf("\nPlayer %d has had there turn. It is now Player ",playerTurn);
+		printf("\nPlayer %d has had there turn. It is now",playerTurn);// ***-***
 		playerTurn = playerChangeTurn(playerTurn);
-		printf("%d turn to play.",playerTurn);
+		printf("\033[0;31m");
+		printf(" Player %d ",playerTurn);
+		printf("\033[0m");
+		printf("turn to play.");
 	}
 	
 }
@@ -718,7 +724,7 @@ FILE *fp;
 	
 	//printf("searchingUsername: %s ",searchingUsername);
 
-//	printf("\nUSERNAME 	SCORE\n");
+	printf("\nUSERNAME 	SCORE\n");
 	while (fgets(line,100,fp) && found == 0)
 	{
 
@@ -758,12 +764,15 @@ FILE *fp;
 		
 		}	
 
-		printf("\n%s",line);
+	printf("\n%s",line);
 		memset(line,0,100);
 	}	
 
 
 }
+
+// ADD VALIDATION AND SANITATION TO ENTER USERNAME
+
 void main(){
 	system("clear");
 	char mainMenuChoice;
