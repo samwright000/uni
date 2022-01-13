@@ -15,13 +15,13 @@ char shiftLetter(char c, int shiftValue){
 
 	if (shiftValue > 25){
 
-		shiftValue = shiftValue % 26;
+		shiftValue = shiftValue % 26; // makes the shifing cirular - if you enter 27 it would be as if you entered 1
 	
 	}
 
 	if (cValue > 64 && cValue < 91 && cValue != 32){
-	
-		cValue = cValue - 65;
+	// this is for capitals
+		cValue = cValue - 65; // 0s the value to make a = 0 so then we are able to apply the mod which devides and gives the remainder we mod my 26 as there are 26 letters
 		cValue = cValue + shiftValue;
 		cValue = cValue % 26;
 		cValue = cValue + 65;	
@@ -29,12 +29,14 @@ char shiftLetter(char c, int shiftValue){
 	}
 
 	else if (cValue > 96 && cValue < 123 && cValue != 32){
-	
+	// lower case letters
 		cValue = cValue - 96;
 		cValue = cValue + shiftValue;
 		cValue = cValue % 26;
 		cValue = cValue + 96;
 	}
+
+	// if it is not lower case or upper case it will not be shifed it will also not be shifted if it is a space which is the 32 
 
 
 
@@ -74,6 +76,11 @@ void main(void){
 	
 	printf("\n");
 	printf("OUTPUT: ");
+
+	// below goes though each digit in the array inputs the char and the shift value 
+	// I have done it like this so the way it is shifted could be completely different but I am progaming 
+	// to the interface so the way it would be dealt with (printed) would be the same 
+	//
 	for (i=0; i<sizeof(plaintext);i++){
 
 		if (plaintext[i] != NULL) {
