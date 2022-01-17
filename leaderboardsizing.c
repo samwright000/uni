@@ -1,7 +1,108 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
+
+
+// FOR SOME REASON ONLY PRINITING one charter for leaderboard, find the change and fix it.
+
+
+
+
+char * printUsernameOrScore(int searchingForLineNumber, int usernameOrScore){
+	//printf("2.1\n");
+	
+	FILE *fp;
+	char line[100];
+	char foundUsername[50];
+	char foundScore[50];
+	int pass = 0;
+	int found = 0;
+	int lineNumber=0;
+	int sizeOfUsername =0;
+
+	fp = fopen("leaderboard.txt","r");
+	
+	//printf("searchingUsername: %s ",searchingUsername);
+	//printf("2.2\n");
+	//printf("\nUSERNAME 	SCORE\n");
+	memset(line,0,100);
+	memset(foundScore,0,50);
+	memset(foundUsername,0,50);
+
+
+	//printf("2.3\n");
+
+	
+	while (fgets(line,100,fp) && found == 0)
+	{
+
+		lineNumber++;
+//		printf("\n%s\n",line);
+		
+		int i;
+		sizeOfUsername = 0;
+		pass = 0;
+		for (i=0; i<=sizeof(line); i++)
+		{
+	//		printf("\nline[i] = %c\n",line[i]);
+			
+			if (line[i] == NULL){
+			
+				
+			}
+
+			if (line[i] == ',')
+			{
+				pass = 1;
+			}
+
+			else if (line[i] != NULL && pass == 0){
+				printf("2.5\n");
+				foundUsername[i]=line[i];
+		//		printf("\nfound username: %s\n",foundUsername);
+				sizeOfUsername++;
+			}
+
+			if  (line[i] != NULL && pass == 1){
+				printf("\nIn Found Score\n");
+		//		printf("2.6\n");
+				
+				foundScore[i-sizeOfUsername]=line[i+1];
+		//		printf("\nfound score: %s \n",foundScore);
+			}
+		
+		}	
+
+		printf("2.3\n");
+
+		if (lineNumber == searchingForLineNumber){
+		
+			if (usernameOrScore == 0)
+			{
+				int intFoundUsername = foundUsername;
+				printf("intFoundUsername = %i");
+				printf("\nUSENRAME = %s\n",foundUsername);
+				return foundUsername;
+			}
+
+			if (usernameOrScore == 1)
+			{
+				printf("\nSCORE = %s\n",foundScore);
+				int intFoundScore = foundScore;
+				return (char *)foundScore; 
+			}
+		}
+		
+		printf("\nLINE = \n%s",line);
+		memset(line,0,100);
+		memset(foundUsername,0,50);
+		memset(foundScore,0,50);
+	}	
+
+
+}
 
 int printLeaderboardVBoarder(int size)
 {
@@ -50,31 +151,46 @@ int printHeaderLeaderBoard(int size)
 
 }
 
-int printLeaderboardUsernameAndScore(int size, char username[100], char score[5])
+
+int printLeaderboardUsernameAndScore(int size, char username[100], char score[100])
 {
 	//char username[100] = "123456789012345";
 	//char score[5];
 	int usernameSize = 0;
 	int scoreSize = 0;
 
+	printf("\n inprint leaderboardusenrameandscore\n");
+	printf("\nUSERNAME 3 = %s\n",username);
+	//printf("\nSCORE 3 = %i\n",score);
+
 	// --------
+
+	printf("\nin\n");
+
 
 	printf("| ");
 	
 	int i=0;
+	printf("\nin2\n");
+	/*
 	while (i<=100)
-	{	
+	{
+		printf("\n in while \n");
+		//printf("username = %c",username);	
+		printf("after username");
 		if (username[i] == NULL)
 		{
+			printf("\nin if username\n");
 			break;
 		}
 		usernameSize++;
 	//	printf("\nusername[%i] - %c\n",i,username[i]);
 		i++;
-	}
+	}*/
 
+	printf("\nin3\n");
+	
 	i=0;
-
 	while (i<=5)
 	{
 		if (score[i] == NULL)
@@ -186,6 +302,21 @@ int getMaxUsernameSize()
 
 int numberOfLinesLeaderboard()
 {
+	
+	FILE *fp; 
+	char line[100];
+	char numberOfLinesInFile = 0;
+
+	fp = fopen("leaderboard.txt","r");
+
+	while (fgets(line,100,fp))
+	{
+	
+		numberOfLinesInFile++;
+		
+	}
+
+	return numberOfLinesInFile;
 // workout the number of lines in the file
 // then after that create 2 functions one that returns the name for hte line number
 // and one that returns the score (might of already been made)
@@ -198,22 +329,45 @@ int numberOfLinesLeaderboard()
 //
 // then in main will make something which looks for the highest score 
 // and then prints the highest score and username. 
-
 }
 
 void main()
 {
 	int maxSize = getMaxUsernameSize();
-	
+	int numberOfLinesFile;
+	char *username;
+	//printf("\nUSERNAMMMMME %s\n",*username);
+	char *score[100];
+	int i;
+
+	numberOfLinesFile = numberOfLinesLeaderboard();
+
 	printf("\n");
 
 	//printLeaderboard(maxSize);
+	
 	printLeaderboardVBoarder(maxSize);
 	printHeaderLeaderBoard(maxSize);
 	printLeaderboardVBoarder(maxSize);
-	printLeaderboardUsernameAndScore(maxSize,"sam","99999");
-	printLeaderboardUsernameAndScore(maxSize,"samualwrightttttt","100");
+
+	printf("\n1\n");	
+	for (i=1;i<=numberOfLinesFile;i++){
+		printf("2\n");
+		username = printUsernameOrScore(i,0);
+		printf("3\n");
+		*score = printUsernameOrScore(i,1);
+		
+		printf("\nUSERNAME 2 = %s\n",username);
+		printf("\nSCORE 2 = %s\n",*score);
+
+		printf("\n222\n");
+		printLeaderboardUsernameAndScore(maxSize,username,score);
+
+		printf("\n111\n");
+	}
+
 	printLeaderboardVBoarder(maxSize);
+
 
 	/*
 	 * Ok so the working out the correct spacing is good enough, could improve by
