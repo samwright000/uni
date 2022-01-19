@@ -4,6 +4,12 @@
 #include <stdlib.h>
 
 
+int charToInt(char locationchar){
+
+        // This function will returna char number to an int one
+        return locationchar - '0';
+
+}
 
 // FOR SOME REASON ONLY PRINITING one charter for leaderboard, find the change and fix it.
 
@@ -91,6 +97,22 @@ void printUsernameOrScore(int searchingForLineNumber, int usernameOrScore,char* 
 			{
 	//			printf("\nSCORE = %s\n",foundScore);
 				int intFoundScore = foundScore;
+				
+				char temp_score[50];
+				char *token;
+				char toRemove[2]="\n";
+				//printf("\n");
+				//printf("before");
+				//printf("%s = score",foundScore);
+				//printf("...");
+
+				strtok(foundScore,"\n");
+
+				//printf("after");
+				//printf("%s = tempscore",foundScore);
+				//printf("...");
+				//printf("\n");
+				
 				return; //foundScore; 
 			}
 		}
@@ -168,7 +190,7 @@ int printLeaderboardUsernameAndScore(int size, char username[100], char score[10
 //	printf("\nin\n");
 
 
-	printf("\n| ");
+	printf("| ");
 	
 	int i=0;
 //	printf("\nin2\n");
@@ -243,6 +265,15 @@ int printLeaderboardUsernameAndScore(int size, char username[100], char score[10
 
 
 	int scoreSizeCorrect = 0; 
+	int intScore;
+
+	intScore = charToInt(score);
+
+	for (i=0;i<sizeof(score);i++){
+	
+//		printf("score[i] = %c\n",score[i]);
+	}
+
 	printf("%s",score);
 
 	scoreSizeCorrect = 5 - scoreSize; // its very unlikely to have user with greater than 99999 score so just doing it to the spacing of the word score
@@ -251,8 +282,10 @@ int printLeaderboardUsernameAndScore(int size, char username[100], char score[10
 	{
 		printf(" ");
 	}
-	
-	printf("|\n");
+
+	printf("|");
+	printf("\n");	
+
 
 
 	return 0;
@@ -331,20 +364,117 @@ int numberOfLinesLeaderboard()
 // and then prints the highest score and username. 
 }
 
+
+void createArrays(char usernames[50][100], char scores[50][5])
+{
+	printf("in");
+	int i;
+	int numberOfLines;
+	
+	//char scores [50][5]; // 50 players with 5 digits for there score
+	//char usernames[50][100]; // 50 players with 100 digits 
+
+	char username[100];
+	char score[100];
+	numberOfLines = numberOfLinesLeaderboard();
+
+	for (i=0;i<=numberOfLines;i++){
+
+		int ii;
+		
+		printUsernameOrScore(i,0,username,score); //username = 0 score = 1
+
+		for (ii=0;ii<=sizeof(username);ii++){
+		
+			usernames[i][ii] = username[ii];
+			scores[i][ii] = score[ii];
+		}
+	
+	//printf("%c",usernames[1][0]);
+//	printf("%s\n",usernames[i]);
+//	printf("%s\n",scores[i]);
+	}
+
+	printf("usernames = %s",usernames[1]);
+}
+
 void main()
 {
+	printf("1");
+
 	int maxSize = getMaxUsernameSize();
 	int numberOfLinesFile;
 	char username[100];
 	char score[100];
 	int i;
+	char scores [50][5]; // 50 players with 5 digits for there score
+	char usernames[50][100]; // 50 players with 100 digits 
 
 	numberOfLinesFile = numberOfLinesLeaderboard();
+	
+	createArrays(usernames, scores);
 
-	printf("\n");
+	int currentScoreLocation;
+	char currentScore[5];
+
+	int currentHighestScore = 0;
+	int currentHighestScoreLocation = 1;
+	
+	while (currentScoreLocation <= numberOfLinesFile){
+	
+
+	
+		for (currentScoreLocation=1; currentScoreLocation<=numberOfLinesFile; currentScoreLocation++){
+	
+			for (i=0; i<=sizeof(score); i++){
+		
+
+				currentScore[i]=scores[currentScoreLocation][i];
+		
+				if (currentScore[i] == NULL){
+			
+					break;
+				}
+
+				strtok(currentScore,"\n");
+			
+
+			}
+		
+			int intScore = atoi(currentScore);
+	
+		printf("int score = %d\n",intScore);
+
+		printf("currentScore = %s",currentScore);
+
+			printf("1");
+			if (intScore > currentHighestScore){
+		
+				currentHighestScore = intScore;
+				currentHighestScoreLocation=currentScoreLocation;
+		
+			}
+
+
+		}
+
+	char toPrintUsername[50] = "hi";
+
+	// THink might be something here causing the errorstrcpy(toPrintUsername,usernames[currentHighestScoreLocation]);
+
+	printf("before");
+	printLeaderboardUsernameAndScore(maxSize,toPrintUsername,currentHighestScore);	
+
+	printf("after");
+	}
+
+	printf("HightestScore = %s",currentHighestScore);
+
+
 
 	//printLeaderboard(maxSize);
 	
+	/*
 	printLeaderboardVBoarder(maxSize);
 	printHeaderLeaderBoard(maxSize);
 	printLeaderboardVBoarder(maxSize);
@@ -366,7 +496,7 @@ void main()
 	}
 
 	printLeaderboardVBoarder(maxSize);
-
+*/
 
 	/*
 	 * Ok so the working out the correct spacing is good enough, could improve by
