@@ -10,13 +10,13 @@
 
 
 
-char * printUsernameOrScore(int searchingForLineNumber, int usernameOrScore){
+void printUsernameOrScore(int searchingForLineNumber, int usernameOrScore,char* foundUsername, char* foundScore){
 	//printf("2.1\n");
 	
 	FILE *fp;
 	char line[100];
-	char foundUsername[50];
-	char foundScore[50];
+	//char foundUsername[50];
+	//char foundScore[50];
 	int pass = 0;
 	int found = 0;
 	int lineNumber=0;
@@ -59,14 +59,14 @@ char * printUsernameOrScore(int searchingForLineNumber, int usernameOrScore){
 			}
 
 			else if (line[i] != NULL && pass == 0){
-				printf("2.5\n");
+	//			printf("2.5\n");
 				foundUsername[i]=line[i];
 		//		printf("\nfound username: %s\n",foundUsername);
 				sizeOfUsername++;
 			}
 
 			if  (line[i] != NULL && pass == 1){
-				printf("\nIn Found Score\n");
+	//			printf("\nIn Found Score\n");
 		//		printf("2.6\n");
 				
 				foundScore[i-sizeOfUsername]=line[i+1];
@@ -75,27 +75,27 @@ char * printUsernameOrScore(int searchingForLineNumber, int usernameOrScore){
 		
 		}	
 
-		printf("2.3\n");
+	//	printf("2.3\n");
 
 		if (lineNumber == searchingForLineNumber){
 		
 			if (usernameOrScore == 0)
 			{
 				int intFoundUsername = foundUsername;
-				printf("intFoundUsername = %i");
-				printf("\nUSENRAME = %s\n",foundUsername);
-				return foundUsername;
+	//			printf("intFoundUsername = %i");
+	//			printf("\nUSENRAME = %s\n",foundUsername);
+				return; //usnenrame;
 			}
 
 			if (usernameOrScore == 1)
 			{
-				printf("\nSCORE = %s\n",foundScore);
+	//			printf("\nSCORE = %s\n",foundScore);
 				int intFoundScore = foundScore;
-				return (char *)foundScore; 
+				return; //foundScore; 
 			}
 		}
 		
-		printf("\nLINE = \n%s",line);
+	//	printf("\nLINE = \n%s",line);
 		memset(line,0,100);
 		memset(foundUsername,0,50);
 		memset(foundScore,0,50);
@@ -159,36 +159,36 @@ int printLeaderboardUsernameAndScore(int size, char username[100], char score[10
 	int usernameSize = 0;
 	int scoreSize = 0;
 
-	printf("\n inprint leaderboardusenrameandscore\n");
-	printf("\nUSERNAME 3 = %s\n",username);
+//	printf("\n inprint leaderboardusenrameandscore\n");
+//	printf("\nUSERNAME 3 = %s\n",username);
 	//printf("\nSCORE 3 = %i\n",score);
 
 	// --------
 
-	printf("\nin\n");
+//	printf("\nin\n");
 
 
-	printf("| ");
+	printf("\n| ");
 	
 	int i=0;
-	printf("\nin2\n");
-	/*
+//	printf("\nin2\n");
+	
 	while (i<=100)
 	{
-		printf("\n in while \n");
+//		printf("\n in while \n");
 		//printf("username = %c",username);	
-		printf("after username");
+//		printf("after username");
 		if (username[i] == NULL)
 		{
-			printf("\nin if username\n");
+//			printf("\nin if username\n");
 			break;
 		}
 		usernameSize++;
 	//	printf("\nusername[%i] - %c\n",i,username[i]);
 		i++;
-	}*/
+	}
 
-	printf("\nin3\n");
+	//printf("\nin3\n");
 	
 	i=0;
 	while (i<=5)
@@ -291,7 +291,7 @@ int getMaxUsernameSize()
 		if (currentSizeUsername > maxSizeUsername)
 		{
 			maxSizeUsername = currentSizeUsername;
-			printf("\nMAX SIZE = %i",maxSizeUsername);
+	//		printf("\nMAX SIZE = %i",maxSizeUsername);
 		}
 		
 	}
@@ -335,9 +335,8 @@ void main()
 {
 	int maxSize = getMaxUsernameSize();
 	int numberOfLinesFile;
-	char *username;
-	//printf("\nUSERNAMMMMME %s\n",*username);
-	char *score[100];
+	char username[100];
+	char score[100];
 	int i;
 
 	numberOfLinesFile = numberOfLinesLeaderboard();
@@ -350,20 +349,20 @@ void main()
 	printHeaderLeaderBoard(maxSize);
 	printLeaderboardVBoarder(maxSize);
 
-	printf("\n1\n");	
+	//printf("\n1\n");	
 	for (i=1;i<=numberOfLinesFile;i++){
-		printf("2\n");
-		username = printUsernameOrScore(i,0);
-		printf("3\n");
-		*score = printUsernameOrScore(i,1);
+	//	printf("2\n");
+		printUsernameOrScore(i,0,username,score);
+	//	printf("3\n");
+		printUsernameOrScore(i,1,username,score);
 		
-		printf("\nUSERNAME 2 = %s\n",username);
-		printf("\nSCORE 2 = %s\n",*score);
+	//	printf("\nUSERNAME 2 = %s\n",username);
+	//	printf("\nSCORE 2 = %s\n",score);
 
-		printf("\n222\n");
+	//	printf("\n222\n");
 		printLeaderboardUsernameAndScore(maxSize,username,score);
 
-		printf("\n111\n");
+	//	printf("\n111\n");
 	}
 
 	printLeaderboardVBoarder(maxSize);
