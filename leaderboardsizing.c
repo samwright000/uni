@@ -4,19 +4,25 @@
 #include <stdlib.h>
 
 
+int charToInt(char locationchar){
+
+        // This function will returna char number to an int one
+        return locationchar - '0';
+
+}
 
 // FOR SOME REASON ONLY PRINITING one charter for leaderboard, find the change and fix it.
 
 
 
 
-char * printUsernameOrScore(int searchingForLineNumber, int usernameOrScore){
+void printUsernameOrScore(int searchingForLineNumber, int usernameOrScore,char* foundUsername, char* foundScore){
 	//printf("2.1\n");
 	
 	FILE *fp;
 	char line[100];
-	char foundUsername[50];
-	char foundScore[50];
+	//char foundUsername[50];
+	//char foundScore[50];
 	int pass = 0;
 	int found = 0;
 	int lineNumber=0;
@@ -59,14 +65,14 @@ char * printUsernameOrScore(int searchingForLineNumber, int usernameOrScore){
 			}
 
 			else if (line[i] != NULL && pass == 0){
-				printf("2.5\n");
+	//			printf("2.5\n");
 				foundUsername[i]=line[i];
 		//		printf("\nfound username: %s\n",foundUsername);
 				sizeOfUsername++;
 			}
 
 			if  (line[i] != NULL && pass == 1){
-				printf("\nIn Found Score\n");
+	//			printf("\nIn Found Score\n");
 		//		printf("2.6\n");
 				
 				foundScore[i-sizeOfUsername]=line[i+1];
@@ -75,27 +81,43 @@ char * printUsernameOrScore(int searchingForLineNumber, int usernameOrScore){
 		
 		}	
 
-		printf("2.3\n");
+	//	printf("2.3\n");
 
 		if (lineNumber == searchingForLineNumber){
 		
 			if (usernameOrScore == 0)
 			{
 				int intFoundUsername = foundUsername;
-				printf("intFoundUsername = %i");
-				printf("\nUSENRAME = %s\n",foundUsername);
-				return foundUsername;
+	//			printf("intFoundUsername = %i");
+	//			printf("\nUSENRAME = %s\n",foundUsername);
+				return; //usnenrame;
 			}
 
 			if (usernameOrScore == 1)
 			{
-				printf("\nSCORE = %s\n",foundScore);
+	//			printf("\nSCORE = %s\n",foundScore);
 				int intFoundScore = foundScore;
-				return (char *)foundScore; 
+				
+				char temp_score[50];
+				char *token;
+				char toRemove[2]="\n";
+				//printf("\n");
+				//printf("before");
+				//printf("%s = score",foundScore);
+				//printf("...");
+
+				strtok(foundScore,"\n");
+
+				//printf("after");
+				//printf("%s = tempscore",foundScore);
+				//printf("...");
+				//printf("\n");
+				
+				return; //foundScore; 
 			}
 		}
 		
-		printf("\nLINE = \n%s",line);
+	//	printf("\nLINE = \n%s",line);
 		memset(line,0,100);
 		memset(foundUsername,0,50);
 		memset(foundScore,0,50);
@@ -159,36 +181,36 @@ int printLeaderboardUsernameAndScore(int size, char username[100], char score[10
 	int usernameSize = 0;
 	int scoreSize = 0;
 
-	printf("\n inprint leaderboardusenrameandscore\n");
-	printf("\nUSERNAME 3 = %s\n",username);
+//	printf("\n inprint leaderboardusenrameandscore\n");
+//	printf("\nUSERNAME 3 = %s\n",username);
 	//printf("\nSCORE 3 = %i\n",score);
 
 	// --------
 
-	printf("\nin\n");
+//	printf("\nin\n");
 
 
 	printf("| ");
 	
 	int i=0;
-	printf("\nin2\n");
-	/*
+//	printf("\nin2\n");
+	
 	while (i<=100)
 	{
-		printf("\n in while \n");
+//		printf("\n in while \n");
 		//printf("username = %c",username);	
-		printf("after username");
+//		printf("after username");
 		if (username[i] == NULL)
 		{
-			printf("\nin if username\n");
+//			printf("\nin if username\n");
 			break;
 		}
 		usernameSize++;
 	//	printf("\nusername[%i] - %c\n",i,username[i]);
 		i++;
-	}*/
+	}
 
-	printf("\nin3\n");
+	//printf("\nin3\n");
 	
 	i=0;
 	while (i<=5)
@@ -243,6 +265,15 @@ int printLeaderboardUsernameAndScore(int size, char username[100], char score[10
 
 
 	int scoreSizeCorrect = 0; 
+	int intScore;
+
+	intScore = charToInt(score);
+
+	for (i=0;i<sizeof(score);i++){
+	
+//		printf("score[i] = %c\n",score[i]);
+	}
+
 	printf("%s",score);
 
 	scoreSizeCorrect = 5 - scoreSize; // its very unlikely to have user with greater than 99999 score so just doing it to the spacing of the word score
@@ -251,8 +282,10 @@ int printLeaderboardUsernameAndScore(int size, char username[100], char score[10
 	{
 		printf(" ");
 	}
-	
-	printf("|\n");
+
+	printf("|");
+	printf("\n");	
+
 
 
 	return 0;
@@ -291,7 +324,7 @@ int getMaxUsernameSize()
 		if (currentSizeUsername > maxSizeUsername)
 		{
 			maxSizeUsername = currentSizeUsername;
-			printf("\nMAX SIZE = %i",maxSizeUsername);
+	//		printf("\nMAX SIZE = %i",maxSizeUsername);
 		}
 		
 	}
@@ -331,43 +364,139 @@ int numberOfLinesLeaderboard()
 // and then prints the highest score and username. 
 }
 
+
+void createArrays(char usernames[50][100], char scores[50][5])
+{
+	printf("in");
+	int i;
+	int numberOfLines;
+	
+	//char scores [50][5]; // 50 players with 5 digits for there score
+	//char usernames[50][100]; // 50 players with 100 digits 
+
+	char username[100];
+	char score[100];
+	numberOfLines = numberOfLinesLeaderboard();
+
+	for (i=0;i<=numberOfLines;i++){
+
+		int ii;
+		
+		printUsernameOrScore(i,0,username,score); //username = 0 score = 1
+
+		for (ii=0;ii<=sizeof(username);ii++){
+		
+			usernames[i][ii] = username[ii];
+			scores[i][ii] = score[ii];
+		}
+	
+	//printf("%c",usernames[1][0]);
+//	printf("%s\n",usernames[i]);
+//	printf("%s\n",scores[i]);
+	}
+
+	printf("usernames = %s",usernames[1]);
+}
+
 void main()
 {
+	printf("1");
+
 	int maxSize = getMaxUsernameSize();
 	int numberOfLinesFile;
-	char *username;
-	//printf("\nUSERNAMMMMME %s\n",*username);
-	char *score[100];
+	char username[100];
+	char score[100];
 	int i;
+	char scores [50][5]; // 50 players with 5 digits for there score
+	char usernames[50][100]; // 50 players with 100 digits 
 
 	numberOfLinesFile = numberOfLinesLeaderboard();
+	
+	createArrays(usernames, scores);
 
-	printf("\n");
+	int currentScoreLocation;
+	char currentScore[5];
+
+	int currentHighestScore = 0;
+	int currentHighestScoreLocation = 1;
+	
+	while (currentScoreLocation <= numberOfLinesFile){
+	
+
+	
+		for (currentScoreLocation=1; currentScoreLocation<=numberOfLinesFile; currentScoreLocation++){
+	
+			for (i=0; i<=sizeof(score); i++){
+		
+
+				currentScore[i]=scores[currentScoreLocation][i];
+		
+				if (currentScore[i] == NULL){
+			
+					break;
+				}
+
+				strtok(currentScore,"\n");
+			
+
+			}
+		
+			int intScore = atoi(currentScore);
+	
+		printf("int score = %d\n",intScore);
+
+		printf("currentScore = %s",currentScore);
+
+			printf("1");
+			if (intScore > currentHighestScore){
+		
+				currentHighestScore = intScore;
+				currentHighestScoreLocation=currentScoreLocation;
+		
+			}
+
+
+		}
+
+	char toPrintUsername[50] = "hi";
+
+	// THink might be something here causing the errorstrcpy(toPrintUsername,usernames[currentHighestScoreLocation]);
+
+	printf("before");
+	printLeaderboardUsernameAndScore(maxSize,toPrintUsername,currentHighestScore);	
+
+	printf("after");
+	}
+
+	printf("HightestScore = %s",currentHighestScore);
+
+
 
 	//printLeaderboard(maxSize);
 	
+	/*
 	printLeaderboardVBoarder(maxSize);
 	printHeaderLeaderBoard(maxSize);
 	printLeaderboardVBoarder(maxSize);
 
-	printf("\n1\n");	
+	//printf("\n1\n");	
 	for (i=1;i<=numberOfLinesFile;i++){
-		printf("2\n");
-		username = printUsernameOrScore(i,0);
-		printf("3\n");
-		*score = printUsernameOrScore(i,1);
+	//	printf("2\n");
+		printUsernameOrScore(i,0,username,score);
+	//	printf("3\n");
+		printUsernameOrScore(i,1,username,score);
 		
-		printf("\nUSERNAME 2 = %s\n",username);
-		printf("\nSCORE 2 = %s\n",*score);
+	//	printf("\nUSERNAME 2 = %s\n",username);
+	//	printf("\nSCORE 2 = %s\n",score);
 
-		printf("\n222\n");
+	//	printf("\n222\n");
 		printLeaderboardUsernameAndScore(maxSize,username,score);
 
-		printf("\n111\n");
+	//	printf("\n111\n");
 	}
 
 	printLeaderboardVBoarder(maxSize);
-
+*/
 
 	/*
 	 * Ok so the working out the correct spacing is good enough, could improve by
