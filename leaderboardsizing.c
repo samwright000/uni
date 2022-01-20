@@ -367,7 +367,7 @@ int numberOfLinesLeaderboard()
 
 void createArrays(char usernames[50][100], char scores[50][5])
 {
-	printf("in");
+//	printf("in");
 	int i;
 	int numberOfLines;
 	
@@ -395,12 +395,12 @@ void createArrays(char usernames[50][100], char scores[50][5])
 //	printf("%s\n",scores[i]);
 	}
 
-	printf("usernames = %s",usernames[1]);
+//	printf("usernames = %s",usernames[1]);
 }
 
 void main()
 {
-	printf("1");
+//	printf("\n1\n");
 
 	int maxSize = getMaxUsernameSize();
 	int numberOfLinesFile;
@@ -410,6 +410,7 @@ void main()
 	char scores [50][5]; // 50 players with 5 digits for there score
 	char usernames[50][100]; // 50 players with 100 digits 
 
+//	printf("\n2\n");
 	numberOfLinesFile = numberOfLinesLeaderboard();
 	
 	createArrays(usernames, scores);
@@ -419,10 +420,15 @@ void main()
 
 	int currentHighestScore = 0;
 	int currentHighestScoreLocation = 1;
+	char currentHighestScoreString[5];	
 	
-	while (currentScoreLocation <= numberOfLinesFile){
+	int numberOfTimesToRun = 0;
 	
-
+	while (numberOfTimesToRun<=numberOfLinesFile){
+	printf("\n...\n");
+		while (currentScoreLocation <= numberOfLinesFile){
+			currentHighestScore =0;
+			currentScoreLocation = 0;
 	
 		for (currentScoreLocation=1; currentScoreLocation<=numberOfLinesFile; currentScoreLocation++){
 	
@@ -443,33 +449,45 @@ void main()
 		
 			int intScore = atoi(currentScore);
 	
-		printf("int score = %d\n",intScore);
+		printf("\n");
+		printf("\nint score = %d",intScore);
 
-		printf("currentScore = %s",currentScore);
-
-			printf("1");
+		printf("\ncurrentScore = %s",currentScore);
+		printf("\ncurrentHighestScore %d",currentHighestScore);
+		
+		printf("\nlocation = %d",currentScoreLocation);
+		printf("\ncurrent Highestscore location %d",currentHighestScoreLocation);
+		printf("\n");
+		currentHighestScoreLocation=0;
+	//	printf("\n4\n");
 			if (intScore > currentHighestScore){
 		
 				currentHighestScore = intScore;
 				currentHighestScoreLocation=currentScoreLocation;
-		
+				strcpy(currentHighestScoreString,currentScore);
 			}
+
+//			printf("\n5\n");
 
 
 		}
 
-	char toPrintUsername[50] = "hi";
 
-	// THink might be something here causing the errorstrcpy(toPrintUsername,usernames[currentHighestScoreLocation]);
-
-	printf("before");
-	printLeaderboardUsernameAndScore(maxSize,toPrintUsername,currentHighestScore);	
-
-	printf("after");
+		printLeaderboardUsernameAndScore(maxSize,usernames[currentScoreLocation-1],currentHighestScoreString);	
+	
+	int sizeOfScoreToRemove;
+	for (sizeOfScoreToRemove=0;sizeOfScoreToRemove <= sizeof(scores[currentScoreLocation-1]);sizeOfScoreToRemove++){
+	
+		scores[currentScoreLocation-1][sizeOfScoreToRemove] = '0';
+	}
+	printf("\nnow : %s\n",scores[currentScoreLocation-1]);
 	}
 
-	printf("HightestScore = %s",currentHighestScore);
-
+	printf("\nnumberoftimestorun = %d\n",numberOfTimesToRun);
+	printf("\nnumberoflines = %d\n",numberOfLinesFile);
+	currentScoreLocation=0;
+	numberOfTimesToRun++;	
+	}
 
 
 	//printLeaderboard(maxSize);
