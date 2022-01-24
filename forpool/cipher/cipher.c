@@ -3,6 +3,14 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+int charToInt(char locationchar){
+
+        // This function will returna char number to an int one
+        return locationchar - '0';
+
+}
+
+
 char shiftLetter(char c, int shiftValue){
 	
 	int cValue;
@@ -57,6 +65,7 @@ void main(void){
 
 	system("clear");
 
+
 	char plaintext[25] = "";
 	int shiftValue;
 	char cipherC;
@@ -68,8 +77,15 @@ void main(void){
 	printf("\nPlease Enter Input: ");
 	scanf("%[^\n]%*c",plaintext);
 
-	printf("\nPlease Enter Shift Value: ");
-	scanf("%d",&shiftValue);
+	
+	//	printf("2");
+
+		printf("\nPlease Enter Shift Value: ");
+		scanf("%d",&shiftValue);
+
+	//	printf("1");
+	//	if (!isdigit(shiftValue)){printf("enterd a number");break;}
+
 
 //	printf("\nDEBUG | (main) plaintext = %s\n",plaintext);
 //	printf("\nDEBUG | (main) shiftValue = %d\n",shiftValue);
@@ -90,7 +106,13 @@ void main(void){
 			
 			//if (strcmp(plaintext[i]," ")==0){printf("SPACE");}
 			
-			cipherC=shiftLetter(plaintext[i],shiftValue);
+
+	//		int intShiftValue;
+
+	//		intShiftValue = charToInt(shiftValue);
+			
+			cipherC=shiftLetter(plaintext[i],shiftValue);	
+			
 			printf("%c",cipherC);
 		}
 	}
@@ -98,6 +120,6 @@ void main(void){
 	printf("\n");
 
 
-
+	
 
 }
