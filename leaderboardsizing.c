@@ -227,6 +227,7 @@ int printLeaderboardUsernameAndScore(int size, char username[100], char score[10
 
 	//printf("\nDEBUG - username size %i\n",usernameSize);
 
+	
 	int sizeCorrect;
 
 	if (usernameSize < 8)
@@ -259,6 +260,12 @@ int printLeaderboardUsernameAndScore(int size, char username[100], char score[10
 	if (usernameSize == 8)
 	{
 		printf("%s",username);
+		for (i=0;i<=sizeCorrect-3;i++)
+                {
+                        printf(" ");
+
+                }
+
 	}
 
 	printf(" | ");
@@ -424,12 +431,14 @@ void main()
 	
 	int numberOfTimesToRun = 0;
 	
-	while (numberOfTimesToRun<=numberOfLinesFile){
-	printf("\n...\n");
-		while (currentScoreLocation <= numberOfLinesFile){
-			currentHighestScore =0;
-			currentScoreLocation = 0;
-	
+//	while (numberOfTimesToRun<=numberOfLinesFile){
+//	printf("\n...\n");
+	currentHighestScoreLocation = 1;
+	currentHighestScore=0;
+		//while (currentScoreLocation <= numberOfLinesFile){
+			//currentHighestScore =0;
+			//currentScoreLocation = 0;
+/*	
 		for (currentScoreLocation=1; currentScoreLocation<=numberOfLinesFile; currentScoreLocation++){
 	
 			for (i=0; i<=sizeof(score); i++){
@@ -448,19 +457,16 @@ void main()
 			}
 		
 			int intScore = atoi(currentScore);
-	
+*/	/*
 		printf("\n");
 		printf("\nint score = %d",intScore);
-
 		printf("\ncurrentScore = %s",currentScore);
 		printf("\ncurrentHighestScore %d",currentHighestScore);
-		
 		printf("\nlocation = %d",currentScoreLocation);
 		printf("\ncurrent Highestscore location %d",currentHighestScoreLocation);
 		printf("\n");
-		currentHighestScoreLocation=0;
-	//	printf("\n4\n");
-			if (intScore > currentHighestScore){
+			
+		if (intScore > currentHighestScore){
 		
 				currentHighestScore = intScore;
 				currentHighestScoreLocation=currentScoreLocation;
@@ -472,27 +478,43 @@ void main()
 
 		}
 
+		printLeaderboardUsernameAndScore(maxSize,usernames[currentHighestScoreLocation],currentHighestScoreString);
+		
+		int toRemoveI;
+		char temp_usernames[50][100];
+		char temp_scores[50][5];
+		int pass=0;
 
-		printLeaderboardUsernameAndScore(maxSize,usernames[currentScoreLocation-1],currentHighestScoreString);	
-	
-	int sizeOfScoreToRemove;
-	for (sizeOfScoreToRemove=0;sizeOfScoreToRemove <= sizeof(scores[currentScoreLocation-1]);sizeOfScoreToRemove++){
-	
-		scores[currentScoreLocation-1][sizeOfScoreToRemove] = '0';
-	}
-	printf("\nnow : %s\n",scores[currentScoreLocation-1]);
-	}
+		for (toRemoveI=0;toRemoveI<=sizeof(scores);toRemoveI++){
+		
+			if (toRemoveI==currentHighestScoreLocation){
+				pass =1;
+			}
 
-	printf("\nnumberoftimestorun = %d\n",numberOfTimesToRun);
-	printf("\nnumberoflines = %d\n",numberOfLinesFile);
-	currentScoreLocation=0;
-	numberOfTimesToRun++;	
-	}
+			else if (pass ==1){
+			
+				strcpy(scores[toRemoveI+1],scores[toRemoveI]);
+				strcpy(usernames[toRemoveI+1],usernames[toRemoveI]);
+*/
+//				int x;
+				/*
+				for (x=0;x<sizeof(scores[currentHighestScore-1]);x++){
+					temp_scores[toRemoveI-1][x]=scores[toRemoveI][x];
+				*/
+		
+//			}
+
+//		}
+
+	
+	
+//	numberOfTimesToRun++;	
+//	}
 
 
 	//printLeaderboard(maxSize);
 	
-	/*
+	
 	printLeaderboardVBoarder(maxSize);
 	printHeaderLeaderBoard(maxSize);
 	printLeaderboardVBoarder(maxSize);
@@ -514,7 +536,6 @@ void main()
 	}
 
 	printLeaderboardVBoarder(maxSize);
-*/
 
 	/*
 	 * Ok so the working out the correct spacing is good enough, could improve by
