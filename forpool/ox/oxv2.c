@@ -11,12 +11,6 @@ int charToInt(char locationchar){
 
 }
 
-#include <string.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
-
-
 
 void printUsernameOrScore(int searchingForLineNumber, int usernameOrScore,char* foundUsername, char* foundScore){
     //printf("2.1\n");
