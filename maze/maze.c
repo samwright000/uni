@@ -15,29 +15,40 @@ void mainMenu(){
 
 
 int getPlayerMoveDirection(){
+	
+	  int c;
+	  /* use system call to make terminal send all keystrokes directly to stdin */
+	  system ("/bin/stty raw");
+	  
+	  while((c=getchar())!= '.') {
+		  
+		/* type a period to break out of the loop, since CTRL-D won't work raw */
+		break;
+	  }
+	  /* use system call to set terminal behaviour to more normal behaviour */
+	  system ("/bin/stty cooked");
+	  
 
-	char direction[1];
 
-	printf("\n ! UNDER CONSTRUCTION !\n");
-	printf(" u is UP\nd is DOWN\nl is LEFT\nr is RIGHT\n");
-	printf(">>> ");
-	scanf("%s",&direction);
-
-	if (direction[0] == 'u'){
+	if (c == 'w' || c == 'W'){
 		return 1;
 	}
 
-	if (direction[0] == 'r'){
+	if (c == 'd' || c == 'D'){
 		return 2;
 	}
 
-	if (direction[0] == 'd'){
+	if (c == 's' || c == 'S'){
 		return 3;
 	}
 
-	if (direction[0] == 'l'){
+	if (c == 'a' || c == 'A'){
 		return 4;
 	}
+	
+	if (c == 'q' || c == 'Q'){
+		system("clear");
+		return 5;}
 	
 }
 
@@ -49,11 +60,11 @@ int makeLevel(int level[400], char levelName[100]){
 	char fileName[104];
 	int intLine;
 	
-	printf("SIZE = %d",sizeof(maze));
+	//printf("SIZE = %d",sizeof(maze));
 
 	sprintf(fileName,"/home/sam/wm145/maze/levels/%s.txt",levelName);//home/sam/wm145/maze/levels/level1.txt
 	
-	printf("\nDEBUG - Level Loaded = %s\n",fileName);
+	//printf("\nDEBUG - Level Loaded = %s\n",fileName);
 	
 	FILE *fp;
 
@@ -127,9 +138,7 @@ int checkIfValidMove(){
 	
 	}
 
-int makeMove(int up, int right, int down, int left, int level[400]){
-
-	int playerPos=21;
+int makeMove(int up, int right, int down, int left, int level[400], int playerPos){
 	
 	int validMove = 0;
 
@@ -145,43 +154,68 @@ int makeMove(int up, int right, int down, int left, int level[400]){
 	
 	// 1 = up, 2 = right, 3 = down, 4 = left
 	
+	
+	
 	while (validMove != 1){
+		
+		found = 0;
+		line = 0;
+		
+		//printf("\n START found = %d\n",found);
+		//printf("\nup = %d, right = %d , down = %d, left = %d\n",up,right,down,left);
+		//printf("\nPlayer current Pos  = %d",playerPos);
 		
 		attemptedMove = getPlayerMoveDirection();
 		direction=attemptedMove;
+		
+		
 		
 		if (attemptedMove == 1){attemptedMove = up ;}
 		else if (attemptedMove == 2){attemptedMove = right;}
 		else if (attemptedMove == 3){attemptedMove = down;}
 		else if (attemptedMove == 4){attemptedMove = left;}
+		else if (attemptedMove == 5){return 5;}
 		
-		int newPos= playerPos+attemptedMove ;	
+		
+		int newPos = playerPos+attemptedMove;	
 		
 		
-		for (i=0; i<=sizeof(level); i++){
+		//printf("size of level = %d",sizeof(level));
+		for (i=0; i<=400; i++){
+			//printf("\nnewPos = %d", newPos);
+			//printf(" level[i] = %d\n",level[i]);
 			
-			printf("\nnewPos = %d", newPos);
-			printf(" level[i] = %d\n",level[i]);
-			
-			if (newPos == level[i]){found = 1; printf("level = %d ,",level[i]);}
+			if (newPos == level[i] && level[i]!=0){
+				
+				
+				found = 1; 
+				//printf("\nfound = %d",found);
+				//printf("\nlevel = %d ,",level[i]);
+				
+				}
 			
 			else{line++;}
 			
 		}
 		
-		printf("\nfound = %d",found);
+		//printf("\n after found = %d",found);
+		//printf("\n line = %d , sizeoflevel = %d",line,sizeof(level));
+		
 			
-		if (line==sizeof(level) && found == 0){
+		if (found == 0){
 			
 			validMove = 1;
 			
 			}
 		
-		
-		
 		else{
 			
+			system("clear");
+			
+			displayLevel(level, playerPos);
+			
 			displayError("\nThat is not a valid move!\n");
+			
 			
 			}
 			
@@ -189,8 +223,8 @@ int makeMove(int up, int right, int down, int left, int level[400]){
 			
 		}
 		
-	printf("valid move = %d",validMove);
-	printf("\n\nRETURNED\n\n");
+	//printf("valid move = %d",validMove);
+	//printf("\n\nRETURNED\n\n");
 	return attemptedMove;
 
 }
@@ -303,23 +337,128 @@ void endGame(){
 	exit(1);
 }
 
+void displayLevelArray(int level[400]){
+	
+	int i;
+	
+	for (i=0; i<=400; i++){
+		printf("\nlevel[%d] = %d",i, level[i]); 
+		}
+	
+	}
+	
+void displayMaseHeader(){
+	printf("\n");
+	printf("  ██          ██    ████     ████████ \n");
+	printf("  ████      ████  ██    ██        ██        \n");
+	printf("  ██  ██  ██  ██  ████████      ██        \n");
+	printf("  ██    ██    ██  ██    ██    ██        \n");
+	printf("  ██          ██  ██    ██   █████████ \n");
+	
+	/*
+	printf("██          ██    ████     ████████  ████████\n");
+	printf("████      ████  ██    ██        ██        ██\n");
+	printf("██  ██  ██  ██  ████████      ██        ██\n");
+	printf("██    ██    ██  ██    ██    ██        ██ \n");
+	printf("██          ██  ██    ██   ████████  ████████ \n");
+	*/
+	
+	}
+
+void displayLevel(int level[400], int playerPos){
+	
+	//printf("\n\n DISPLAY LEVEL \n\n");
+	
+	//displayLevelArray(level);
+	displayMaseHeader();
+	
+	printf("\n");
+
+	int i;
+	int levelPos;
+	
+	int found;
+	
+
+	displayError("██");
+	for (i=0;i<=400;i++){
+		
+		int ii;
+		
+		found = 0;
+		
+		for (ii=0;ii<400;ii++){
+		
+			//printf("%d = %d",i,level[ii]);
+		
+			if (level[ii]==i && level[ii] != 0){
+				found = 1;
+				}	
+			}
+			
+		
+		
+		
+		//printf("\nfound = %d",found);
+		
+		if (playerPos == i){
+			
+			displayValidEntry("░░");
+			}
+		
+		else if (found == 1){
+			
+			displayError("██");
+			
+			}
+			
+		else if (found == 0 && i!=0){
+			
+			printf("  ");
+			
+			}
+		
+		if (i==19 || i == 39 || i==59 || i==79 || i==99 || i==119 || i==139 || i==159 || i==179 || i==199 || i==219 || i==239 || i==259 || i==279 || i==299 || i==319 || i==339 || i==359 || i==379 || i==399){
+			printf("\n");
+			
+		}
+		
+		
+	
+	}
+	
+	printf("\nTo Play use WSAD, if you would like to quit just press 'q'\n");
+	
+}
+
 void playGame(int up, int right, int down, int left, int level[400], int playerPos){
 	
 	int play = 1;
 	
 	while (true){
+		
+		system("clear");
+		printf("\n POS = %d", playerPos);
+		
 	
 		int directionValue;
 		
-		directionValue = makeMove(up, right, down, left, level);
 		
-		printf("direcvalue = %d",directionValue);
+		displayLevel(level, playerPos);
 		
-		printf("\nBPOS = %d",playerPos);
+		directionValue = makeMove(up, right, down, left, level, playerPos);
 		
-		playerPos = playerPos-directionValue;
+		if (directionValue==5){break;}
 		
-		printf("\nAPOS = %d",playerPos);
+		if (playerPos == 378){printf("\nyou win\n");return 0;}
+		
+		//printf("direcvalue = %d",directionValue);
+		
+		//printf("\nBPOS = %d",playerPos);
+		
+		playerPos = playerPos+directionValue;
+		
+		//printf("\nAPOS = %d",playerPos);
 	
 }
 }
@@ -339,9 +478,9 @@ void main(){
 	int playerPos = 21;
 	
 	int up = -20;
-	int right = -1;
+	int right = 1;
 	int down = +20;
-	int left = 1;
+	int left = -1;
 
 	char message[100];
 
