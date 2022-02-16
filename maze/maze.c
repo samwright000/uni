@@ -52,17 +52,38 @@ int getPlayerMoveDirection(){
 	
 }
 
-int makeLevel(int level[400], char levelName[100]){
+int makeLevel(int level[400], char levelName[100], int levelSettings[100], char dir[400]){
+	
+	printf("start make level");
 
 	int maze[324];
 	memset(maze,0,1296);
 	int boarder[76] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,39,59,79,99,119, 139, 159, 179,199,219,239,259,279,299,319,339,359,379,399,380,381,382,383,384,385,386,387,388,389,390,391,392,393,394,395,396,397,398, 20,40,60,80,100,120,140,160,180,200,220,240,260,280,300,320,340,360};
 	char fileName[104];
+	char fileNameSettings[104];
+
+	char endFile[504];
+	char endFileSettings[504];
+	
+	printf("\ndir1 = %s\n",dir);
+	
+	printf("\nendfile = '%s'\n",dir);
+	
+	sprintf(endFile,"%s/%s.txt",dir,levelName);
+	
+	sprintf(endFileSettings,"%s/.%s.config",dir,levelName);
+	
+	//strtok(endFile,"\n");
+	
+	printf("\nendfile = '%s'\n",endFile);
+	
+	printf("\nendfilesettings = '%s'\n",endFileSettings);
+	
 	int intLine;
 	
-	//printf("SIZE = %d",sizeof(maze));
-
-	sprintf(fileName,"/home/sam/wm145/maze/levels/%s.txt",levelName);//home/sam/wm145/maze/levels/level1.txt
+	//sprintf(fileName,"/home/sam/wm145/maze/levels/%s.txt",levelName);//home/sam/wm145/maze/levels/level1.txt
+	//printf("%s",fileName);
+	//sprintf(fileNameSettings,"/home/sam/wm145/maze/levels/.%s.config",levelName);
 	
 	//printf("\nDEBUG - Level Loaded = %s\n",fileName);
 	
@@ -71,7 +92,7 @@ int makeLevel(int level[400], char levelName[100]){
 	
 	char line[100];
 
-	fp = fopen(fileName,"r");
+	fp = fopen(endFile,"r");
 
 	int i = 0;
 
@@ -90,11 +111,41 @@ int makeLevel(int level[400], char levelName[100]){
 		
 		}
 		
+	printf("\n next \n");
+	
+	fclose(fp);
+	
+	fp = fopen(endFileSettings,"r");
+
+	i = 0;
+	
+	printf("\n next\n");
+
+	while (fgets(line,100,fp) && fgets != 0){
+		printf("\n next in \n");
+		intLine = atoi(line);
+		//printf("\nline int %d",intLine);
+		
+		if (intLine == 0){break;}
+		
+		levelSettings[i] = intLine;
+		
+		i++;
+		
+		memset(line,0,100);
+		
+		}
+		
+		//printf("levelsetting 0 = %d",levelSettings[0]);
+		//printf("levelsettings 1 = %d",levelSettings[1]);
+		
+	printf("\n next\n");
+		
 	for (i=0;i<=324;i++){
 		
 		if (maze[i]==0){break;}
 		
-		printf("\nmaze[%d] = %d",i,maze[i]);
+		//printf("\nmaze[%d] = %d",i,maze[i]);
 		
 		}
 		
@@ -114,11 +165,11 @@ int makeLevel(int level[400], char levelName[100]){
 		
 		} 
 		
-		printf("\nhello\n");
+		//printf("\nhello\n");
 		
 	for (i=0; i<=400; i++){
 		
-		printf("\nlevel[%d] = %d",i,level[i]);
+		//printf("\nlevel[%d] = %d",i,level[i]);
 		
 		}
 		
@@ -138,7 +189,7 @@ int checkIfValidMove(){
 	
 	}
 
-int makeMove(int up, int right, int down, int left, int level[400], int playerPos){
+int makeMove(int up, int right, int down, int left, int level[400], int playerPos, int endPos){
 	
 	int validMove = 0;
 
@@ -212,7 +263,7 @@ int makeMove(int up, int right, int down, int left, int level[400], int playerPo
 			
 			system("clear");
 			
-			displayLevel(level, playerPos);
+			displayLevel(level, playerPos,endPos);
 			
 			displayError("\nThat is not a valid move!\n");
 			
@@ -270,7 +321,7 @@ int levelSelection(char fileNames[50][100], int numberOfLevels, char currentLeve
 	return 0;
 }
 
-int getAllLevelNames(char fileNames[50][100]){
+int getAllLevelNames(char fileNames[50][100],char dir[400]){
 
 	// help from https://c-for-dummies.com/blog/?p=3246
 
@@ -278,14 +329,17 @@ int getAllLevelNames(char fileNames[50][100]){
 	struct dirent *entry;
 	int files = 0;
 
-	folder = opendir("/home/sam/wm145/maze/levels");
+	folder = opendir(dir);
+	
+
 	
 	if(folder == NULL)
 	{
 		perror("Unable to read directory");
+		return 0;
     	}
 
-    	while( (entry=readdir(folder)) )
+    	while((entry=readdir(folder)) )
     	{		
 		if (entry->d_name[0] != '.'){
 			strcpy(fileNames[files],entry->d_name);
@@ -295,6 +349,15 @@ int getAllLevelNames(char fileNames[50][100]){
     	}
 
     	closedir(folder);
+    	
+    	int i;
+    	
+    	for (i=0;i<files;i++){
+			
+			printf("\nDEBUG FILE = %s\n",fileNames[i]);
+			
+			}
+
 	
 	return files;
 
@@ -342,7 +405,7 @@ void displayLevelArray(int level[400]){
 	int i;
 	
 	for (i=0; i<=400; i++){
-		printf("\nlevel[%d] = %d",i, level[i]); 
+		//printf("\nlevel[%d] = %d",i, level[i]); 
 		}
 	
 	}
@@ -365,7 +428,7 @@ void displayMaseHeader(){
 	
 	}
 
-void displayLevel(int level[400], int playerPos){
+void displayLevel(int level[400], int playerPos, int endPos){
 	
 	//printf("\n\n DISPLAY LEVEL \n\n");
 	
@@ -405,6 +468,11 @@ void displayLevel(int level[400], int playerPos){
 			
 			displayValidEntry("░░");
 			}
+			
+		else if (endPos==i){
+			displayError("░░");
+			
+			}
 		
 		else if (found == 1){
 			
@@ -431,26 +499,28 @@ void displayLevel(int level[400], int playerPos){
 	
 }
 
-void playGame(int up, int right, int down, int left, int level[400], int playerPos){
+void playGame(int up, int right, int down, int left, int level[400], int playerPos, int endPos){
 	
 	int play = 1;
 	
 	while (true){
 		
 		system("clear");
-		printf("\n POS = %d", playerPos);
+		//printf("\n POS = %d", playerPos);
 		
 	
 		int directionValue;
 		
 		
-		displayLevel(level, playerPos);
+		displayLevel(level, playerPos,endPos);
 		
-		directionValue = makeMove(up, right, down, left, level, playerPos);
+		if (playerPos == endPos){printf("\nyou win\n");return 0;}
+		
+		directionValue = makeMove(up, right, down, left, level, playerPos, endPos);
 		
 		if (directionValue==5){break;}
 		
-		if (playerPos == 378){printf("\nyou win\n");return 0;}
+		
 		
 		//printf("direcvalue = %d",directionValue);
 		
@@ -467,15 +537,17 @@ void main(){
 
 	system("clear");
 	
-	
 	char fileNames[50][100];
 	char currentLevelName[100] = "level_default";
 	int level[400];
-
+	int levelSettings[100];
+	char dir[400];
+	
 	int numberOfLevels;
 	char mainMenuOption[1];
 	int playAgain = 1;
 	int playerPos = 21;
+	int endPos = 378;
 	
 	int up = -20;
 	int right = 1;
@@ -483,14 +555,36 @@ void main(){
 	int left = -1;
 
 	char message[100];
-
-
-	numberOfLevels = getAllLevelNames(fileNames);
 	
+	while (numberOfLevels < 1){
+		
+		printf("Please Enter the Directory of where the level files are located (this can be done by using the 'pwd' command in the terminal)\nUsally Looks like ❝/home/'computer user'/'then the path'❞ \n>>> ");
+		scanf("%s",dir);
+		
+		//sprintf(dir,"/home/sam/wm145/maze/levels");
+		
+		printf("\n%s|\n",dir);
 
-	makeLevel(level,currentLevelName);
+
+		numberOfLevels = getAllLevelNames(fileNames,dir);
+		
+		if (numberOfLevels == 0){
+			displayError("\nERROR - THERE ARE NO NUMBER OF LEVELS\n\n");
+			}
+		
+	}
 	
-	while (true){
+	printf("\nafter number of levels\n");
+	
+	printf("\nhello\n");
+	
+	makeLevel(level,currentLevelName,levelSettings,dir);
+	
+	printf("\nafter make level\n");
+	
+	while (1==1){
+		
+		printf("\nin while true\n");
 
 		mainMenu();
 		printf("\n>>> ");
@@ -499,7 +593,9 @@ void main(){
 		if (strcmp(mainMenuOption,"1") == 0){
 			system("clear"); 
 			displayValidEntry("\nThat is a valid entry!\n"); 
-			playGame(up, right, down, left, level, playerPos);
+			playerPos = levelSettings[0];
+			endPos = levelSettings[1];
+			playGame(up, right, down, left, level, playerPos,endPos);
 	
 		}
 
@@ -514,9 +610,11 @@ void main(){
 			displayValidEntry("\nThat is a valid entry!\n"); 
 			levelSelection(fileNames,numberOfLevels,currentLevelName);
 			
-			printf("\n\033[0;32m You have selected level ");
-                        printf("%s",currentLevelName);
-                        printf("\033[0m\n");
+			printf("\n\033[0;32m You have selected level ");                        
+			printf("%s",currentLevelName);
+            printf("\033[0m\n");
+            memset(level,0,400);
+            makeLevel(level,currentLevelName,levelSettings,dir);
 		}
 
 		else if (strcmp(mainMenuOption,"q") == 0){
@@ -537,5 +635,4 @@ void main(){
 }
 
 // CURRENT ISSUES
-// 1. when press play game it looks like it takes an entry then displays it to the user to enter
-// 2. issue with make move might just need to do again will probs take longer to figure it out why not right than rewritting it.
+// 1. When hit barrier exit location not shown. 
