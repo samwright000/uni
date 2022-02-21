@@ -4,6 +4,9 @@
 #include <stdbool.h>
 #include <dirent.h>
 #include <time.h>
+#include <signal.h>
+
+//void signal_handler(int signal){}
 
 void mainMenu(){
 	
@@ -14,6 +17,8 @@ void mainMenu(){
 	printf("\n2. See Level Names");
 	printf("\n3. Select Custom Level");
 	printf("\n4. Play A Play List of All The Levels (\033[0;32mTimed\033[0m)");
+	printf("\n5. Settings");
+	printf("\n6. Change Directory *TODO*");
 	printf("\nq.");
 	displayError(" Quit");
 	
@@ -287,6 +292,8 @@ int levelSelection(char fileNames[50][100], int numberOfLevels, char currentLeve
 	int found = 0;
 	
 	while (found!=1){
+		
+		displayMaseHeader();
 
 		displayLevelNames(fileNames, numberOfLevels);
 
@@ -412,6 +419,9 @@ void displayLevelArray(int level[400]){
 	}
 	
 void displayMaseHeader(){
+	
+	// Yes i know it spelt wrong... its meant to be quirky >:)
+	
 	printf("\n");
 	printf("  ██          ██    ████     ████████ \n");
 	printf("  ████      ████  ██    ██        ██        \n");
@@ -483,7 +493,7 @@ void displayLevel(int level[400], int playerPos, int endPos){
 			
 			}
 			
-		else if (found == 0 && i!=0){
+		else if (found == 0&&i!=0&&i<=399){
 			
 			printf("\033[0;37m");
 			printf("██");
@@ -562,6 +572,7 @@ void changeOverallSettings(int overallGameSettings[2]){
 			}
 			
 		else if (strcmp(shouldChangeSettings,"n")==0){
+			system("clear");
 			
 			return;
 			
@@ -577,6 +588,8 @@ void changeOverallSettings(int overallGameSettings[2]){
 		
 	}
 	
+	
+	
 	while (true){
 	
 		printf("\nEnter the number of the setting you want to change (this will toggle it on or off)\n\n>>> ");
@@ -585,29 +598,36 @@ void changeOverallSettings(int overallGameSettings[2]){
 		
 		scanf("%s",&change);
 		
-		if (strcmp(change,"1")==0 || strcmp(change,"2")){
+		if (strcmp(change,"1")==0){
+			system("clear");
 			
+			if (overallGameSettings[0] == 1){overallGameSettings[0]=0;}
+			else{overallGameSettings[0] = 1;}
+			break;
+		}
+		
+		if (strcmp(change,"2")==0){
+				system("clear");
+				if (overallGameSettings[1] == 1){overallGameSettings[0]=0;}
+				else{overallGameSettings[1] = 1;}
 				break;
-			
-			}
+
+		}
 			
 		else{
 			
 			system("clear");
 			
+			displayError("\nInvalid Setting Input, Please Enter From The Numbers Below!\n");
 			displayOverAllGameSettings(overallGameSettings);
 				
 			}
-			
-			
 			// fix here that is works just run it and you will see it doesn't work
-		
 		}
-
 	}
 }
 
-void playGame(int up, int right, int down, int left, int level[400], int playerPos, int endPos){
+void playGame(int up, int right, int down, int left, int level[400], int playerPos, int endPos, int numberOfMoves[1]){
 	
 	int play = 1;
 	
@@ -625,6 +645,7 @@ void playGame(int up, int right, int down, int left, int level[400], int playerP
 		if (playerPos == endPos){return 0;}
 		
 		directionValue = makeMove(up, right, down, left, level, playerPos, endPos);
+		numberOfMoves[0]=numberOfMoves[0]+1;
 		
 		if (directionValue==5){break;}
 		
@@ -645,11 +666,14 @@ void main(){
 
 	system("clear");
 	
+	//signal(SIGINT,  signal_handler);
+	
 	char fileNames[50][100];
+	char fileNames2[50][100];
 	char currentLevelName[100] = "level_default";
 	int level[400];
 	int levelSettings[100];
-	char dir[400] = "/home/sam/wm145/maze/levels";
+	char dir[400] = "/home/csc/wm145/maze/levels";
 	
 	int numberOfLevels;
 	char mainMenuOption[1];
@@ -661,51 +685,38 @@ void main(){
 	overallGameSettings[0] = 0;
 	overallGameSettings[1] = 0;
 	
-	
 	int up = -20;
 	int right = 1;
 	int down = +20;
 	int left = -1;
+	
+	time_t timeStart=time(&timeStart);
+	time_t timeEnd;
+	time_t timeTaken;
+	int numberOfMoves[1];
 
 	char message[100];
 	
 	while (numberOfLevels < 1){
 		
 		printf("Please Enter the Directory of where the level files are located (this can be done by using the 'pwd' command in the terminal)\nUsally Looks like ❝/home/'computer user'/'then the path'❞ \n>>> ");
-		//scanf("%s",dir);
 		
-		
-		
-		//sprintf(dir,"/home/sam/wm145/maze/levels");
-		
-	//	printf("\n%s|\n",dir);
-
-
 		numberOfLevels = getAllLevelNames(fileNames,dir);
 		
-
 		int i;
 
 		for (i=0;i<numberOfLevels;i++){
-		
-		//	printf("\nFIRST - filename = %s",fileNames[i]);
-		
+			strcpy(fileNames2[i],fileNames[i]);
 		}
 
 		if (numberOfLevels == 0){
 			displayError("\nERROR - THERE ARE NO NUMBER OF LEVELS\n\n");
 			}
-		
 	}
-	
-	//printf("\nafter number of levels\n");
-	
-	//printf("\nhello\n");
 	
 	int makeOne = 0;
 
 	makeLevel(level,currentLevelName,levelSettings,dir);
-	//printf("\nafter make level\n");
 	
 	while (1==1){
 		
@@ -721,8 +732,27 @@ void main(){
 			displayValidEntry("\nThat is a valid entry!\n"); 
 			playerPos = levelSettings[0];
 			endPos = levelSettings[1];
-			playGame(up, right, down, left, level, playerPos,endPos);
+			
+
+			time(&timeStart);
+			playGame(up, right, down, left, level, playerPos,endPos,numberOfMoves);
+			time(&timeEnd);
 			system("clear");
+			timeTaken = timeEnd-timeStart;
+			
+			if (overallGameSettings[0] == 1){
+			
+				printf("\n\nIt took you %ld seconds to complete the level, well done!!! :)\n\n",timeTaken);
+			}
+			
+			if (overallGameSettings[1] == 1){
+				
+				printf("\n\nIt took %d number of moves to get to the exit!\n\n",numberOfMoves[0]);
+				
+			}
+			
+			timeTaken = 0;
+			numberOfMoves[0]=0;
 	
 		}
 
@@ -730,32 +760,27 @@ void main(){
 			system("clear");
 			displayValidEntry("\nThat is a valid entry!\n");
 			
-			int i;
-			for (i=0;i<numberOfLevels;i++){
-			
-		//		printf("File %d = %s",i+1,fileNames[i]);
+			displayLevelNames(fileNames2, numberOfLevels);
 			}
-			
-			displayLevelNames(fileNames, numberOfLevels); 
-		}
+		
+		
 
 		else if (strcmp(mainMenuOption,"3") == 0){
 			system("clear"); 
-			displayValidEntry("\nThat is a valid entry!\n"); 
-			levelSelection(fileNames,numberOfLevels,currentLevelName);
+			displayValidEntry("\nThat is a valid entry!\n"); 		
+					
+				levelSelection(fileNames2,numberOfLevels,currentLevelName);
 			
-			printf("\n\033[0;32m You have selected level ");                        
-			printf("%s",currentLevelName);
-            		printf("\033[0m\n");
-            		memset(level,0,400);
-            		makeLevel(level,currentLevelName,levelSettings,dir);
-		}
+				printf("\n\033[0;32m You have selected level ");                        
+				printf("%s",currentLevelName);
+            	printf("\033[0m\n");
+            	memset(level,0,400);
+            	makeLevel(level,currentLevelName,levelSettings,dir);
+					
+			}
 		
 		else if (strcmp(mainMenuOption,"4") == 0){
 			
-			time_t timeStart=time(&timeStart);
-			time_t timeEnd;
-			time_t timeTaken;
 			
 			DIR *folder;
 			struct dirent *entry;
@@ -792,23 +817,18 @@ void main(){
 					
 					char * filenameForDisplay = strtok(fileNames[i],".");
 					
+					
+					
 					makeLevel(level,filenameForDisplay,levelSettings,dir);
 					playerPos = levelSettings[0];
 					endPos = levelSettings[1];
-					playGame(up, right, down, left, level, playerPos,endPos);
+					playGame(up, right, down, left, level, playerPos,endPos,numberOfMoves);
 					
 					}
 					
-				time(&timeEnd);
 				
-				timeTaken = timeEnd-timeStart;
 				system("clear");
-				printf("\n\nIt took you %ld seconds to complete the playlist well done!!! :)\n\n",timeTaken);
 				
-				
-					
-				
-
 			}
 			
 		else if (strcmp(mainMenuOption,"5") == 0){
@@ -818,6 +838,36 @@ void main(){
 			changeOverallSettings(overallGameSettings);
 			
 			}
+			
+		else if (strcmp(mainMenuOption,"6")==0){
+			
+			printf("\nin 6\n");
+			numberOfLevels = 0;
+			int i=0;
+			memset(fileNames,0,100);
+			memset(fileNames2,0,100);
+			
+			while (numberOfLevels < 1){
+		
+				printf("Please Enter the Directory of where the level files are located (this can be done by using the 'pwd' command in the terminal)\nUsally Looks like ❝/home/'computer user'/'then the path'❞ \n>>> ");
+				scanf("%s",&dir);
+				
+				numberOfLevels = getAllLevelNames(fileNames,dir);
+				
+
+
+				for (i=0;i<numberOfLevels;i++){
+					strcpy(fileNames2[i],fileNames[i]);
+				}
+
+				if (numberOfLevels == 0){
+					displayError("\nERROR - THERE ARE NO NUMBER OF LEVELS\n\n");
+					}
+			}
+
+			//makeLevel(level,currentLevelName,levelSettings,dir);
+		
+		}
 
 		else if (strcmp(mainMenuOption,"q") == 0){
 			system("clear"); 
@@ -837,4 +887,9 @@ void main(){
 }
 
 // CURRENT ISSUES
-// 1. When hit barrier exit location not shown. 
+// 1. add to be able to change directory while in main menu
+// 2. make a file with all times and moves 
+
+//Next time tips
+//    - make a set up function then were the main menu so then u can use ctrl c to go
+//      back to the menu rather than quit
