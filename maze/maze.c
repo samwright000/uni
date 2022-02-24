@@ -18,7 +18,7 @@ void mainMenu(){
 	printf("\n3. Select Custom Level");
 	printf("\n4. Play A Play List of All The Levels (\033[0;32mTimed\033[0m)");
 	printf("\n5. Settings");
-	printf("\n6. Change Directory *TODO*");
+	printf("\n6. Change Directory");
 	printf("\nq.");
 	displayError(" Quit");
 	
@@ -673,7 +673,7 @@ void main(){
 	char currentLevelName[100] = "level_default";
 	int level[400];
 	int levelSettings[100];
-	char dir[400] = "/home/csc/wm145/maze/levels";
+	char dir[400] = "/home/sam/wm145/maze/levels";
 	
 	int numberOfLevels;
 	char mainMenuOption[1];
