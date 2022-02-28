@@ -6,8 +6,9 @@
 #include <time.h>
 #include <signal.h>
 
-//void signal_handler(int signal){}
+//void signal_handler(int signal){} # used so that can use ctrl c to take back to menu but didn't want to do that anymroe
 
+// display the main menu - does not take input
 void mainMenu(){
 	
 	displayMaseHeader();
@@ -24,7 +25,9 @@ void mainMenu(){
 	
 }
 
-
+// gets the play input and; returns 1 for up, 2 for right, 3 for down and 5 for left
+// was done like this so at the start I was able to just enter w then press enter without spending the time on how i wanted to make it work in the end
+// therefore using a I function which would return the same stuff no matter how the result was got  
 int getPlayerMoveDirection(){
 	
 	  int c;
@@ -63,24 +66,28 @@ int getPlayerMoveDirection(){
 	
 }
 
+
+// this functions makes the levels which are played
+// takes in level[400] which is where the level is stored, levelname which is the file name, the level settings which is where it starts and where it ends then dir 
+// which is the directory where they are stored. 
 int makeLevel(int level[400], char levelName[100], int levelSettings[100], char dir[400]){
 	
 	//printf("start make level");
 
-	int maze[324];
-	memset(maze,0,1296);
-	int boarder[76] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,39,59,79,99,119, 139, 159, 179,199,219,239,259,279,299,319,339,359,379,399,380,381,382,383,384,385,386,387,388,389,390,391,392,393,394,395,396,397,398, 20,40,60,80,100,120,140,160,180,200,220,240,260,280,300,320,340,360};
-	char fileName[104];
-	char fileNameSettings[104];
+	int maze[324]; // the level which gets loaded is called maze and this is only the inner bit as the border is always the same. 
+	memset(maze,0,1296); // this clears the array when the a new level is entered 
+	int boarder[76] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,39,59,79,99,119, 139, 159, 179,199,219,239,259,279,299,319,339,359,379,399,380,381,382,383,384,385,386,387,388,389,390,391,392,393,394,395,396,397,398, 20,40,60,80,100,120,140,160,180,200,220,240,260,280,300,320,340,360}; // this is the boarder which is all ways the same so is stored here then is the maze and board array are both added to the level array
+	char fileName[104]; // this is used to add the exection to the file the extra 4 chars. 
+	char fileNameSettings[104]; // same as above but for the settings file
 
-	char endFile[504];
-	char endFileSettings[504];
+	char endFile[504]; // with dir too
+	char endFileSettings[504];// same as above
 	
 	//printf("\ndir1 = %s\n",dir);
 	
 	//printf("\nendfile = '%s'\n",dir);
 	
-	sprintf(endFile,"%s/%s.txt",dir,levelName);
+	sprintf(endFile,"%s/%s.txt",dir,levelName); // makes the dir and the name of the file so can be anywhere on the system
 	
 	sprintf(endFileSettings,"%s/.%s.config",dir,levelName);
 	
@@ -107,7 +114,7 @@ int makeLevel(int level[400], char levelName[100], int levelSettings[100], char 
 
 	int i = 0;
 
-
+	// below gets each line of the level turns it into a int then adds it to the array. 
 	while (fgets(line,100,fp) && fgets != 0){
 		intLine = atoi(line);
 	//	printf("\nline int %d",intLine);
@@ -194,11 +201,6 @@ int makeLevel(int level[400], char levelName[100], int levelSettings[100], char 
 
 }
 
-int checkIfValidMove(){
-	
-	
-	
-	}
 
 int makeMove(int up, int right, int down, int left, int level[400], int playerPos, int endPos){
 	
@@ -216,6 +218,9 @@ int makeMove(int up, int right, int down, int left, int level[400], int playerPo
 	
 	// 1 = up, 2 = right, 3 = down, 4 = left
 	
+	//what happens is that a move is made then it checks if the move made is allowed if it is then the move direction is added to the current play position
+	//if not the user is asked to enter again
+
 	while (validMove != 1){
 		
 		found = 0;
@@ -285,6 +290,7 @@ int makeMove(int up, int right, int down, int left, int level[400], int playerPo
 
 }
 
+// this allows a user to selected a different level to play 
 int levelSelection(char fileNames[50][100], int numberOfLevels, char currentLevel[100]){
 
 	char levelName[100];
@@ -338,6 +344,7 @@ int getAllLevelNames(char fileNames[50][100],char dir[400]){
 
 	folder = opendir(dir);
 	
+	// returns all the files in the directory which dont start with a "."	
 
 	
 	if(folder == NULL)
@@ -358,20 +365,13 @@ int getAllLevelNames(char fileNames[50][100],char dir[400]){
     	closedir(folder);
     	
     	int i;
-    	
-    	for (i=0;i<files;i++){
-			
-		//	printf("\nDEBUG FILE = %s\n",fileNames[i]);
-			
-			}
 
-	//scanf("%s");
 	return files;
 
 }
 
 void displayError(char message[100]){
-
+	// changes the colour then changes back to normal
 	printf("\033[0;31m");
 	printf("%s",message);
 	printf("\033[0m");
@@ -379,7 +379,7 @@ void displayError(char message[100]){
 }
 
 void displayValidEntry(char message[100]){
-
+	// changes the colour of the text then changes it back
 	printf("\033[0;32m");
 	printf("%s",message);
 	printf("\033[0m");
@@ -387,7 +387,7 @@ void displayValidEntry(char message[100]){
 }
 
 void displayLevelNames(char fileNames[50][100], int numberOfLevels){
-
+	// prints all the avaiable levels to the user
 	int a;
 	int i;
 
@@ -409,7 +409,7 @@ void endGame(){
 }
 
 void displayLevelArray(int level[400]){
-	
+	// was used for debugging 
 	int i;
 	
 	for (i=0; i<=400; i++){
@@ -439,10 +439,8 @@ void displayMaseHeader(){
 	
 	}
 
-void displayLevel(int level[400], int playerPos, int endPos){
-	
-	//printf("\n\n DISPLAY LEVEL \n\n");
-	
+void displayLevel(int level[400], int playerPos, int endPos){	
+	// this renders the level
 	//displayLevelArray(level);
 	displayMaseHeader();
 	
@@ -453,7 +451,7 @@ void displayLevel(int level[400], int playerPos, int endPos){
 	
 	int found;
 	
-
+// for what ever reason the top left cornor is missed out so is put here
 	displayError("██");
 	for (i=0;i<=400;i++){
 		
@@ -518,6 +516,7 @@ void displayLevel(int level[400], int playerPos, int endPos){
 
 void displayOverAllGameSettings(int overallGameSettings[2]){
 	
+	// displays the settings - does not change them
 	
 	displayMaseHeader();
 	
@@ -552,7 +551,8 @@ void displayOverAllGameSettings(int overallGameSettings[2]){
 	}
 	
 void changeOverallSettings(int overallGameSettings[2]){
-	
+	// displays the settings then asks the user if they want to change them then the user enters the number of the of the setting they want to change
+	// then it changes then they are displayed again and asked if they want to change or leave. 
 	char shouldChangeSettings[100];
 	
 	while(true){
@@ -649,17 +649,192 @@ void playGame(int up, int right, int down, int left, int level[400], int playerP
 		
 		if (directionValue==5){break;}
 		
-		
-		
-		//printf("direcvalue = %d",directionValue);
-		
-		//printf("\nBPOS = %d",playerPos);
-		
 		playerPos = playerPos+directionValue;
 		
-		//printf("\nAPOS = %d",playerPos);
+}
+}
+
+void displayLevelCreator(int level[400], int playerPos, int endPos){	
+	// this renders the level
+	//displayLevelArray(level);
+	displayMaseHeader();
+	
+	printf("\n");
+
+	int i;
+	int levelPos;
+	
+	int found;
+	
+// for what ever reason the top left cornor is missed out so is put here
+	//displayError("██");
+	for (i=0;i<=400;i++){
+		
+		int ii;
+		
+		found = 0;
+		
+		for (ii=0;ii<400;ii++){
+		
+			//printf("%d = %d",i,level[ii]);
+		
+			if (level[ii]==i && level[ii] != 0){
+				found = 1;
+				}	
+			}
+			
+		
+		
+		
+		//printf("\nfound = %d",found);
+		
+		if (playerPos == i){
+			
+			displayValidEntry(" ██|");
+			}
+			
+		else if (endPos==i){
+			printf("\033[0;35m");
+			printf(" ██|");
+			printf("\033[0m");
+			
+			}
+		
+		else if (found == 1){
+			//if (i<100){printf(" ");}
+			displayError("██");
+			
+			}
+			
+		else if (found == 0&&i!=0&&i<=399){
+			if (i<100){printf(" ");}
+			printf("\033[0;37m");
+			printf("%d|",i);
+			printf("\033[0m");
+
+			
+			
+			
+			}
+		
+		if (i==19 || i == 39 || i==59 || i==79 || i==99 || i==119 || i==139 || i==159 || i==179 || i==199 || i==219 || i==239 || i==259 || i==279 || i==299 || i==319 || i==339 || i==359 || i==379 || i==399){
+			printf("\n");
+			
+		}
+		
+		
+	
+	}
+	
 	
 }
+
+void makeCustomLevel(){
+	
+	int playerPos = 44;
+	int endPos = 45; 
+	
+	int makingLevelBoarder[76] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,39,59,79,99,119, 139, 159, 179,199,219,239,259,279,299,319,339,359,379,399,380,381,382,383,384,385,386,387,388,389,390,391,392,393,394,395,396,397,398, 20,40,60,80,100,120,140,160,180,200,220,240,260,280,300,320,340,360}; // this is the boarder which is all ways the same so is stored here then is the maze and board array are both added to the level array
+	int makingLevelMaze[324];
+	int makingLevelMazeAndBoarder[400];
+	memset(makingLevelMaze,0,1296); // this clears the array when the a new level is entered 
+
+	char makeFileName[104]; // this is used to add the exection to the file the extra 4 chars. 
+	char makeFileNameSettings[104]; // same as above but for the settings file
+
+	int editorMode = 0; // 0 = add wall, 1 = remove wall
+	
+	int location;
+	
+	while (true){
+		
+		int i;
+		
+		for (i=0;i<=324;i++){
+		
+		if (makingLevelMaze[i]==0){break;}
+		
+		//printf("\nmaze[%d] = %d",i,maze[i]);
+		
+		}
+		
+		for (i=0; i<=76; i++){
+
+			makingLevelMazeAndBoarder[i] = makingLevelBoarder[i];
+			
+			}
+		
+		int x = 0;	
+		
+		for (i=77; i<=400; i++){
+			
+			makingLevelMazeAndBoarder[i]=makingLevelMaze[x];
+			
+			x++;
+			
+			} 
+			
+			
+		for (i=0; i<=400; i++){
+			
+			printf("\nlevel[%d] = %d",i,makingLevelMazeAndBoarder[i]);
+			
+			}
+			
+		displayLevelCreator(makingLevelMaze ,playerPos, endPos);
+		
+		// 0 = add wall, 1 = remove wall
+		
+		char editingLocation[100];
+		int intEditingLocation;
+		
+		if (editorMode == 0){
+			int isValueLocation = 1;
+			
+			while (true){
+				printf("\nPlease Enter The Value Of The Wall You Want To Add \n\n >>> ");
+				scanf("%s",&editingLocation);
+				intEditingLocation = atoi(editingLocation);
+				printf("\n int editing location = %d\n",intEditingLocation);
+				
+				int a;
+				for (a=0;a<=400;a++){
+					
+					if (intEditingLocation == makingLevelMazeAndBoarder[a] || intEditingLocation < 21 || intEditingLocation > 378){
+						
+						isValueLocation = 0;
+						printf("1");
+						
+						}
+					
+					}
+				
+				if (isValueLocation == 1){printf("\nBreaking\n");break;}
+				
+			}
+				
+				int b;
+				
+				for (b=0;b<=400;b++){
+					printf("\n in loop\n");
+					
+					if (makingLevelMaze[b] == 0){
+						printf("\n\nsetting\n\n");
+						printf("\n%d\n",intEditingLocation);
+						makingLevelMaze[b] = intEditingLocation;
+						printf("\n%d\n",makingLevelMaze[b]);
+						break;
+						
+						}
+					
+					}
+				
+			}
+	}
+
+
+
+
 }
 
 void main(){
@@ -668,29 +843,29 @@ void main(){
 	
 	//signal(SIGINT,  signal_handler);
 	
-	char fileNames[50][100];
-	char fileNames2[50][100];
-	char currentLevelName[100] = "level_default";
-	int level[400];
-	int levelSettings[100];
-	char dir[400] = "/home/csc/wm145/maze/levels";
+	char fileNames[50][100]; // gets all the level names
+	char fileNames2[50][100]; // then stores it in here as a save as the one above can change
+	char currentLevelName[100] = "level_default"; // if a user doesn't select a level this is the default one which is loaded.
+	int level[400]; // this stores the maze + boarder
+	int levelSettings[100]; // the settigns of each level
+	char dir[400] = "/home/csc/wm145/maze/levels"; // this is hard coded just for testing 
 	
 	int numberOfLevels;
 	char mainMenuOption[1];
-	int playAgain = 1;
-	int playerPos = 21;
-	int endPos = 378;
+	int playAgain = 1; // if the user wants to carry on playing
+	int playerPos = 21; // default start 
+	int endPos = 378; // default end - both get changed when a custom level is entered 
 	
 	int overallGameSettings[2]; // time, count
-	overallGameSettings[0] = 0;
-	overallGameSettings[1] = 0;
+	overallGameSettings[0] = 0; // stores the setting of the game 0 is time
+	overallGameSettings[1] = 0; // 1 is number of moves use the setting menu to see 
 	
-	int up = -20;
-	int right = 1;
-	int down = +20;
-	int left = -1;
+	int up = -20; // this is the value which is take from the current pos when the player select up 20 because the grid is 20 blocks long
+	int right = 1; // same above but right 
+	int down = +20; // ''
+	int left = -1;// ''
 	
-	time_t timeStart=time(&timeStart);
+	time_t timeStart=time(&timeStart); // takes takes the start time so that can display to the user if they want to see how long it took for them to complete it 
 	time_t timeEnd;
 	time_t timeTaken;
 	int numberOfMoves[1];
@@ -868,6 +1043,12 @@ void main(){
 			//makeLevel(level,currentLevelName,levelSettings,dir);
 		
 		}
+		
+		else if (strcmp(mainMenuOption,"7")==0){
+			
+			makeCustomLevel();
+			
+			}
 
 		else if (strcmp(mainMenuOption,"q") == 0){
 			system("clear"); 
@@ -887,8 +1068,6 @@ void main(){
 }
 
 // CURRENT ISSUES
-// 1. add to be able to change directory while in main menu
-// 2. make a file with all times and moves 
 
 //Next time tips
 //    - make a set up function then were the main menu so then u can use ctrl c to go
