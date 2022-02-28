@@ -19,7 +19,12 @@ void mainMenu(){
 	printf("\n3. Select Custom Level");
 	printf("\n4. Play A Play List of All The Levels (\033[0;32mTimed\033[0m)");
 	printf("\n5. Settings");
-	printf("\n6. Change Directory *TODO*");
+	printf("\n6. Change Directory");
+<<<<<<< HEAD
+	printf("\n7. To Create A New Level");
+	printf("\n8. To Edited A Current Level");
+=======
+>>>>>>> 0d19d61e95f1f78f47ff747eea90a2777ab11e31
 	printf("\nq.");
 	displayError(" Quit");
 	
@@ -654,17 +659,18 @@ void playGame(int up, int right, int down, int left, int level[400], int playerP
 }
 }
 
-void displayLevelCreator(int level[400], int playerPos, int endPos){	
+void displayLevelCreator(int makingLevelMaze[400], int playerPos, int endPos, int makingLevelBoarder[76]){	
 	// this renders the level
 	//displayLevelArray(level);
-	displayMaseHeader();
 	
 	printf("\n");
+
 
 	int i;
 	int levelPos;
 	
 	int found;
+	int found2;
 	
 // for what ever reason the top left cornor is missed out so is put here
 	//displayError("██");
@@ -678,12 +684,23 @@ void displayLevelCreator(int level[400], int playerPos, int endPos){
 		
 			//printf("%d = %d",i,level[ii]);
 		
-			if (level[ii]==i && level[ii] != 0){
-				found = 1;
+			if (makingLevelMaze[ii]==i && makingLevelMaze[ii] != 0){
+				printf("");found = 1;
 				}	
 			}
 			
+		found2 = 0;
+
+		for (ii=0; ii<400;ii++){
 		
+			if (makingLevelBoarder[ii]==i && makingLevelBoarder[ii] !=0){
+			
+				found2 = 1;
+			
+			
+			}
+		
+		}
 		
 		
 		//printf("\nfound = %d",found);
@@ -700,16 +717,19 @@ void displayLevelCreator(int level[400], int playerPos, int endPos){
 			
 			}
 		
-		else if (found == 1){
-			//if (i<100){printf(" ");}
-			displayError("██");
-			
+		else if (found == 1 || i==0){
+			if (i<10){printf(" ");}
+			if (i<100){printf(" ");}
+			printf("\033[0;31m");
+			printf(" %d ",i);
+			printf("\033[0m");
 			}
 			
-		else if (found == 0&&i!=0&&i<=399){
+		else if (found == 0&&i>=0&&i<=399){
+			if (i<10){printf(" ");}
 			if (i<100){printf(" ");}
 			printf("\033[0;37m");
-			printf("%d|",i);
+			printf(" %d ",i);
 			printf("\033[0m");
 
 			
@@ -718,7 +738,7 @@ void displayLevelCreator(int level[400], int playerPos, int endPos){
 			}
 		
 		if (i==19 || i == 39 || i==59 || i==79 || i==99 || i==119 || i==139 || i==159 || i==179 || i==199 || i==219 || i==239 || i==259 || i==279 || i==299 || i==319 || i==339 || i==359 || i==379 || i==399){
-			printf("\n");
+			printf("\n\n");
 			
 		}
 		
@@ -729,22 +749,25 @@ void displayLevelCreator(int level[400], int playerPos, int endPos){
 	
 }
 
-void makeCustomLevel(){
+void makeCustomLevel(int makingLevelMaze[324], int makingLevelMazeSettings[2]){
 	
-	int playerPos = 44;
-	int endPos = 45; 
+	system("clear");
+	
+	int startPos = -1;
+	int endPos =  -1; 
 	
 	int makingLevelBoarder[76] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,39,59,79,99,119, 139, 159, 179,199,219,239,259,279,299,319,339,359,379,399,380,381,382,383,384,385,386,387,388,389,390,391,392,393,394,395,396,397,398, 20,40,60,80,100,120,140,160,180,200,220,240,260,280,300,320,340,360}; // this is the boarder which is all ways the same so is stored here then is the maze and board array are both added to the level array
-	int makingLevelMaze[324];
 	int makingLevelMazeAndBoarder[400];
 	memset(makingLevelMaze,0,1296); // this clears the array when the a new level is entered 
-
+	memset(makingLevelMazeAndBoarder,0,1296);
 	char makeFileName[104]; // this is used to add the exection to the file the extra 4 chars. 
 	char makeFileNameSettings[104]; // same as above but for the settings file
 
 	int editorMode = 0; // 0 = add wall, 1 = remove wall
 	
 	int location;
+
+	printf("\n YOU HAVE ENTERED EDITOR MODE! Listen up!\nYou can change between add wall and remove wall by entering 'c' (for 'c'hange)\n\n!!!You will add the start and finish position after you have made the maze!!!\n\nYou might want to make the font of the terminal smaller\n\n");
 	
 	while (true){
 		
@@ -777,25 +800,45 @@ void makeCustomLevel(){
 			
 		for (i=0; i<=400; i++){
 			
-			printf("\nlevel[%d] = %d",i,makingLevelMazeAndBoarder[i]);
+			printf("\n1 level[%d] = %d",i,makingLevelMaze[i]);
 			
 			}
 			
-		displayLevelCreator(makingLevelMaze ,playerPos, endPos);
+		
+		displayLevelCreator(makingLevelMazeAndBoarder,startPos, endPos,makingLevelBoarder);
 		
 		// 0 = add wall, 1 = remove wall
 		
 		char editingLocation[100];
 		int intEditingLocation;
-		
+		int isValueLocation = 1;
 		if (editorMode == 0){
-			int isValueLocation = 1;
-			
+		
 			while (true){
-				printf("\nPlease Enter The Value Of The Wall You Want To Add \n\n >>> ");
+				isValueLocation = 1;
+
+				printf("\nPlease Enter The Value Of The Wall You Want To Add (To Change Mode Enter 'c', If You Are Finished Please Enter 'q') \n\n >>> ");
 				scanf("%s",&editingLocation);
+				
+
+				if (strcmp(editingLocation,"c") == 0){editorMode = 1; break;}
+
+
+				if (strcmp(editingLocation,"q") ==0){editorMode = 5; break;}
+				
+				
 				intEditingLocation = atoi(editingLocation);
+
+				if (intEditingLocation < 1 || intEditingLocation > 400){
+				
+					break;
+				
+				}	
+						
+				
+	
 				printf("\n int editing location = %d\n",intEditingLocation);
+			
 				
 				int a;
 				for (a=0;a<=400;a++){
@@ -803,34 +846,87 @@ void makeCustomLevel(){
 					if (intEditingLocation == makingLevelMazeAndBoarder[a] || intEditingLocation < 21 || intEditingLocation > 378){
 						
 						isValueLocation = 0;
-						printf("1");
+						system("clear");
+
 						
+
+						displayLevelCreator(makingLevelMazeAndBoarder,startPos, endPos,makingLevelBoarder);
 						}
 					
 					}
 				
-				if (isValueLocation == 1){printf("\nBreaking\n");break;}
+				if (isValueLocation == 1){break;}
 				
 			}
 				
 				int b;
 				
 				for (b=0;b<=400;b++){
-					printf("\n in loop\n");
+					//printf("\n in loop\n");
 					
 					if (makingLevelMaze[b] == 0){
-						printf("\n\nsetting\n\n");
-						printf("\n%d\n",intEditingLocation);
+					//	printf("\n\nsetting\n\n");
+					//	printf("\n%d\n",intEditingLocation);
 						makingLevelMaze[b] = intEditingLocation;
-						printf("\n%d\n",makingLevelMaze[b]);
+					//	printf("\n%d\n",makingLevelMaze[b]);
 						break;
 						
 						}
 					
 					}
 				
+		}	
+
+		if (editorMode == 5){break;}
+		if (editorMode == 1){
+			
+			printf("\n You have entered editor mode\n");
+			
+			printf("\nPlease Enter The Value Of The Wall You Want To Remove (To Change Mode Enter 'c',If You Are Finished Please Enter 'q')) \n\n >>> ");
+			scanf("%s",&editingLocation);
+			
+			if (strcmp(editingLocation,"c") == 0){editorMode = 0;}
+			
+			if (strcmp(editingLocation,"q") ==0){editorMode = 5; break;}
+		
+			intEditingLocation = atoi(editingLocation);
+			
+			int c;
+
+			for (c=0;c<=399;c++){
+				printf("infor");	
+				if (intEditingLocation == makingLevelMaze[c]){makingLevelMaze[c]=0;printf("action done");}
+			
 			}
+
+		
+		}
+
+
 	}
+
+		char charStartPos[100];
+		char charEndPos[100];
+		
+		while (true){
+			printf("Please Enter Starting Pos \n\n>>> ");
+			scanf("%s",&charStartPos);
+			startPos = atoi(charStartPos);
+			break;
+		}
+
+		while (true){
+			printf("Please Enter End Pos \n\n>>> ");
+			scanf("%s",&charEndPos);
+			endPos = atoi(charEndPos);
+			break;
+		}
+
+
+
+	
+		displayLevelCreator(makingLevelMazeAndBoarder,startPos, endPos,makingLevelBoarder);
+		printf("\nThe Level Above is now the level whish is going to be saved... \n\nDon't worry if there is an error in it you can go into the level file and change if from there!");
 
 
 
@@ -843,12 +939,21 @@ void main(){
 	
 	//signal(SIGINT,  signal_handler);
 	
+<<<<<<< HEAD
 	char fileNames[50][100]; // gets all the level names
 	char fileNames2[50][100]; // then stores it in here as a save as the one above can change
 	char currentLevelName[100] = "level_default"; // if a user doesn't select a level this is the default one which is loaded.
 	int level[400]; // this stores the maze + boarder
 	int levelSettings[100]; // the settigns of each level
-	char dir[400] = "/home/csc/wm145/maze/levels"; // this is hard coded just for testing 
+	char dir[400] = "/home/sam/wm145/maze/levels"; // this is hard coded just for testing 
+=======
+	char fileNames[50][100];
+	char fileNames2[50][100];
+	char currentLevelName[100] = "level_default";
+	int level[400];
+	int levelSettings[100];
+	char dir[400] = "/home/sam/wm145/maze/levels";
+>>>>>>> 0d19d61e95f1f78f47ff747eea90a2777ab11e31
 	
 	int numberOfLevels;
 	char mainMenuOption[1];
@@ -1045,9 +1150,49 @@ void main(){
 		}
 		
 		else if (strcmp(mainMenuOption,"7")==0){
+			int makingLevelMaze[324];
+			int makingLevelMazeSettings[2];
+			makeCustomLevel(makingLevelMaze,makingLevelMazeSettings);
+						
+			char makeCustomLevelName[1000];
+
+			FILE *fp;
+			printf("1");
+
+			fp = fopen("/home/sam/wm145/maze/levels/test.txt","w");
+
+			printf("2");
+			int x;
+
+			char makingLevelEnterToFile[100];
+
+
+
+			for (x=0;x<=400;x++){
+				sprintf(makingLevelEnterToFile,"%d\n",makingLevelMaze[x]);
+				fputs(makingLevelEnterToFile,fp);	
+				//fputs(makingLevelMaze[x],fp);
 			
-			makeCustomLevel();
+
+			}
+
+			fclose(fp);
 			
+			memset(makingLevelEnterToFile,0,100);
+
+			
+
+			fp = fopen("/home/sam/wm145/maze/levels/.test.config","w");
+			
+
+			sprintf(makingLevelEnterToFile,"%d\n",makingLevelMazeSettings[0]);
+			fputs(makingLevelEnterToFile,fp);
+
+			sprintf(makingLevelEnterToFile,"%d\n",makingLevelMazeSettings[1]);
+			fputs(makingLevelEnterToFile,fp);
+			
+			fclose(fp);
+
 			}
 
 		else if (strcmp(mainMenuOption,"q") == 0){
@@ -1068,7 +1213,12 @@ void main(){
 }
 
 // CURRENT ISSUES
+// works saving the level but need to check how it saves the starting and end pos
+//
+// need to add the editing function should be easy just enter the current level into the creater level function and then should work like normal
+
 
 //Next time tips
 //    - make a set up function then were the main menu so then u can use ctrl c to go
 //      back to the menu rather than quit
+//
